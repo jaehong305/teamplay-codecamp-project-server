@@ -55,14 +55,18 @@ export class UserService {
   //   );
   // }
 
+  async checkUser(email) {
+    const users = await this.userRepository.findOne({
+      email,
+    });
+    if (users) throw new ConflictException('중복된 이메일 입니다.');
+  }
+
   async create({ createUserInput }) {
     return await this.userRepository.save(createUserInput);
   }
 
-  async checkUser({ createUserInput }) {
-    const users = await this.userRepository.findOne({
-      email: createUserInput.email,
-    });
-    if (users) throw new ConflictException('이메일 중복을 확인해주세요');
+  async findOne({ email }) {
+    return await this.userRepository.findOne({ email });
   }
 }
