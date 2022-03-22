@@ -8,15 +8,17 @@ import { AppService } from './app.service';
 import type { RedisClientOptions } from 'redis';
 import { TendencyModule } from './apis/tendency/tendency.module';
 import redisStore from 'cache-manager-redis-store';
+import { AuthModule } from './apis/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     TendencyModule,
     UserModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/common/graphql/schema.gql',
-      // context: ({ req, res }) => ({ req, res }),
+      context: ({ req, res }) => ({ req, res }),
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
