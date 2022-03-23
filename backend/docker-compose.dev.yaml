@@ -12,7 +12,7 @@ services:
     volumes:
       - ./src:/teamplay_backend/src
 
-  temaplay_database:
+  teamplay_database:
     platform: linux/x86_64
     image: mysql:latest
     environment:
