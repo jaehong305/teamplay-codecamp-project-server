@@ -9,11 +9,15 @@ import type { RedisClientOptions } from 'redis';
 import { TendencyModule } from './apis/tendency/tendency.module';
 import redisStore from 'cache-manager-redis-store';
 import { AuthModule } from './apis/auth/auth.module';
+import { PositionModule } from './apis/position/position.module';
+import { TypeModule } from './apis/type/type.module';
 
 @Module({
   imports: [
     AuthModule,
+    PositionModule,
     TendencyModule,
+    TypeModule,
     UserModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

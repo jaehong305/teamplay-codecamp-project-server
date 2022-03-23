@@ -1,6 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Position } from '../position/entities/position.entity';
+import { Tendency } from '../tendency/entities/tendency.entity';
+import { Type } from '../type/entities/type.entity';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -8,7 +11,20 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Position)
+    private readonly positionRepository: Repository<Position>,
+    @InjectRepository(Tendency)
+    private readonly tendencyRepository: Repository<Tendency>,
+    @InjectRepository(Type)
+    private readonly typeRepository: Repository<Type>,
   ) {}
+
+  async findOne({ email }) {
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: ['tendencys', 'position', 'types'],
+    });
+  }
 
   checkValidationEmail({ email }) {
     return email.includes('@') && email.includes('.');
@@ -66,7 +82,26 @@ export class UserService {
     return await this.userRepository.save(createUserInput);
   }
 
-  async findOne({ email }) {
-    return await this.userRepository.findOne({ email });
+  async updateByOnboard({ id, updateUserOnboardInput }) {
+    const { positionId, tendencyId, typeId, career } = updateUserOnboardInput;
+
+    const position = await this.positionRepository.findOne({ id: positionId });
+    if (!position) throw new BadRequestException('존재하지 않는 포지션입니다.');
+
+    const tendencys = await Promise.all(tendencyId.map(e => this.tendencyRepository.findOne({ id: e })));
+    if (!tendencys.every(e => e)) throw new BadRequestException('존재하지 않는 성향입니다.');
+
+    const types = await Promise.all(typeId.map(e => this.typeRepository.findOne({ id: e })));
+    if (!types.every(e => e)) throw new BadRequestException('존재하지 않는 분야입니다.');
+
+    const user = await this.userRepository.findOne({ id });
+    const newUser = {
+      ...user,
+      career,
+      position,
+      tendencys,
+      types,
+    };
+    return await this.userRepository.save(newUser);
   }
 }

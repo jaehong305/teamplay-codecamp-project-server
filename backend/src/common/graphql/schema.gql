@@ -2,7 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Tendency {
+type Position {
+  id: String!
+  name: String!
+}
+
+type Type {
   id: String!
   name: String!
   users: [User!]!
@@ -14,7 +19,10 @@ type User {
   name: String!
   createdAt: DateTime!
   deletedAt: DateTime
-  tendencys: [Tendency!]!
+  career: CAREER_ENUM!
+  tendencys: [Tendency!]
+  position: Position
+  types: [Type!]
 }
 
 """
@@ -22,12 +30,27 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+enum CAREER_ENUM {
+  STUDENT
+  JOBSEEKER
+  NEWCOMER
+}
+
+type Tendency {
+  id: String!
+  name: String!
+  users: [User!]!
+}
+
 type Token {
   accessToken: String!
   onboarding: Boolean
 }
 
 type Query {
+  fetchPositions: [Position!]!
+  fetchTendencys: [Tendency!]!
+  fetchTypes: [Type!]!
   fetchUser: User!
 }
 
@@ -35,13 +58,24 @@ type Mutation {
   login(email: String!, password: String!): Token!
   restoreAccessToken: String!
   logout: String!
+  createPosition(name: String!): Position!
+  createTendency(name: String!): Tendency!
+  createType(name: String!): Type!
   sendTokenToEmail(email: String!): String!
   checkTokenToEmail(email: String!, token: String!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
+  updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
 }
 
 input CreateUserInput {
   email: String!
   name: String!
   password: String!
+}
+
+input UpdateUserOnboardInput {
+  career: CAREER_ENUM!
+  tendencyId: [String!]!
+  positionId: String!
+  typeId: [String!]!
 }

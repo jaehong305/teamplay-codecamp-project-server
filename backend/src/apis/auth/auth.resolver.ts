@@ -36,14 +36,14 @@ export class AuthResolver {
     const accessToken = this.authService.getAccessToken({ user });
 
     const isOnboarding = await this.cacheManager.get(email);
-    return isOnboarding
+    return isOnboarding === false
       ? {
           accessToken,
-          onbording: true,
+          onboarding: false,
         }
       : {
           accessToken,
-          onboarding: false,
+          onboarding: true,
         };
   }
 
