@@ -9,6 +9,7 @@ import { IContext } from 'src/common/types/context';
 import { getToday } from 'src/common/libraries/utils';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { Token } from './dto/token';
 
 @Resolver()
 export class AuthResolver {
@@ -20,7 +21,7 @@ export class AuthResolver {
     private readonly cacheManager: Cache,
   ) {}
 
-  @Mutation(() => String)
+  @Mutation(() => Token)
   async login(
     @Args('email') email: string, //
     @Args('password') password: string,
@@ -32,7 +33,18 @@ export class AuthResolver {
     if (!isAuthenticated) throw new UnauthorizedException('이메일 또는 비밀번호가 틀렸습니다.');
 
     this.authService.setRefreshToken({ user, res: context.res });
-    return this.authService.getAccessToken({ user });
+    const accessToken = this.authService.getAccessToken({ user });
+
+    const isOnboarding = await this.cacheManager.get(email);
+    return isOnboarding
+      ? {
+          accessToken,
+          onbording: true,
+        }
+      : {
+          accessToken,
+          onboarding: false,
+        };
   }
 
   @UseGuards(GqlAuthRefeshGuard)
