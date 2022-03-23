@@ -1,9 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Cache } from 'cache-manager';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
+
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
+  ) {}
 
   getAccessToken({ user }) {
     return this.jwtService.sign(
@@ -18,5 +26,22 @@ export class AuthService {
       { secret: process.env.REFRESH_TOKEN_KEY, expiresIn: '2w' },
     );
     res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
+  }
+
+  async snsLogin(req, res) {
+    let user = await this.userService.findOne({ email: req.user.email });
+
+    if (!user) {
+      await this.cacheManager.set(req.user.email, false, { ttl: 0 });
+      const createUserInput = req.user;
+      user = await this.userService.create({ createUserInput });
+    }
+
+    this.setRefreshToken({ user, res });
+
+    const isOnboarding = await this.cacheManager.get(user.email);
+    isOnboarding === false
+      ? res.redirect('https://codecamptest.shop/onboarding')
+      : res.redirect('https://codecamptest.shop');
   }
 }
