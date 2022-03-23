@@ -1,12 +1,13 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/createUser.Input';
-import { UserService } from './user.service';
 import { BadRequestException, CACHE_MANAGER, Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import bcrypt from 'bcrypt';
+import { CreateUserInput } from './dto/createUser.Input';
+import { User } from './entities/user.entity';
+import { UserService } from './user.service';
 import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
+import bcrypt from 'bcrypt';
+import { UpdateUserOnboardInput } from './dto/updateUser.onboard.input';
 
 @Resolver()
 export class UserResolver {
@@ -55,5 +56,15 @@ export class UserResolver {
     createUserInput.password = await bcrypt.hash(createUserInput.password, 10);
     await this.cacheManager.set(createUserInput.email, false, { ttl: 0 });
     return await this.userService.create({ createUserInput });
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => User)
+  async updateUserByOnboard(
+    @CurrentUser() currentUser: ICurrentUser,
+    @Args('updateUserOnboardInput') updateUserOnboardInput: UpdateUserOnboardInput,
+  ) {
+    await this.cacheManager.del(currentUser.email);
+    return await this.userService.updateByOnboard({ id: currentUser.id, updateUserOnboardInput });
   }
 }
