@@ -54,9 +54,9 @@ export class User {
   @Field(() => CAREER_ENUM, { nullable: true })
   career?: CAREER_ENUM;
 
-  @Column()
-  @Field(() => Int, { nullable: true })
-  point?: number;
+  @Column({ default: 0 })
+  @Field(() => Int)
+  point!: number;
 
   @JoinTable()
   @ManyToMany(() => Tendency, tendency => tendency.users)
