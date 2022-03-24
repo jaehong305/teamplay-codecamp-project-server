@@ -1,4 +1,4 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -51,8 +51,12 @@ export class User {
   deletedAt?: Date;
 
   @Column({ type: 'enum', enum: CAREER_ENUM })
-  @Field(() => CAREER_ENUM)
-  career!: CAREER_ENUM;
+  @Field(() => CAREER_ENUM, { nullable: true })
+  career?: CAREER_ENUM;
+
+  @Column()
+  @Field(() => Int, { nullable: true })
+  point?: number;
 
   @JoinTable()
   @ManyToMany(() => Tendency, tendency => tendency.users)
