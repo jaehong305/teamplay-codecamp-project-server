@@ -23,6 +23,10 @@ import { TypeModule } from './apis/type/type.module';
       driver: ApolloDriver,
       autoSchemaFile: 'src/common/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
+      cors: {
+        origin: true, //[process.env.CLIENT_URL],
+        credentials: true,
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
