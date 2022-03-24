@@ -25,7 +25,11 @@ export class AuthService {
       { email: user.email, sub: user.id },
       { secret: process.env.REFRESH_TOKEN_KEY, expiresIn: '2w' },
     );
-    res.setHeader('Set-Cookie', `refreshToken=${refreshToken}; path=/;`);
+    res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL);
+    res.setHeader(
+      'Set-Cookie',
+      `refreshToken=${refreshToken}; path=/; domain=backend.ljh305.shop; SameSite=None; Secure; httpOnly;`,
+    );
   }
 
   async snsLogin(req, res) {
