@@ -32,7 +32,7 @@ import { PlatformModule } from './apis/platform/platform.module';
       autoSchemaFile: 'src/common/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: [process.env.CLIENT_URL],
+        origin: process.env.CLIENT_URL,
         credentials: true,
       },
     }),
