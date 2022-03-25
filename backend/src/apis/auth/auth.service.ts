@@ -25,7 +25,7 @@ export class AuthService {
       { email: user.email, sub: user.id },
       { secret: process.env.REFRESH_TOKEN_KEY, expiresIn: '2w' },
     );
-    res.setHeader('Access-Control-Allow-Origin', ['http://localhost:3000', process.env.CLIENT_URL]);
+    res.setHeader('Access-Control-Allow-Origin', [process.env.CLIENT_URL]);
     res.setHeader(
       'Set-Cookie',
       `refreshToken=${refreshToken}; path=/; domain=.ljh305.shop; SameSite=None; Secure; httpOnly;`,
