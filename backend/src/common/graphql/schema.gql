@@ -2,12 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Position {
+type Region {
   id: String!
   name: String!
 }
 
-type Type {
+type Location {
+  id: String!
+  name: String!
+  region: Region!
+}
+
+type Platform {
+  id: String!
+  name: String!
+  projects: [Project!]!
+}
+
+type Tendency {
   id: String!
   name: String!
   users: [User!]!
@@ -37,19 +49,54 @@ enum CAREER_ENUM {
   NEWCOMER
 }
 
-type Tendency {
+type Type {
   id: String!
   name: String!
   users: [User!]!
 }
 
+type Project {
+  id: String!
+  name: String!
+  teamname: String!
+  intro: String!
+  method: METHOD_ENUM!
+  recruitDate: DateTime!
+  imgUrl: String!
+  skill: String!
+  description: String!
+  isComplete: Boolean!
+  type: Type!
+  location: Location!
+  leader: User!
+  positions: [Position!]!
+  platforms: [Platform!]!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+}
+
+enum METHOD_ENUM {
+  MEET
+  UNTACT
+  MEDIATE
+}
+
+type Position {
+  id: String!
+  name: String!
+  projects: [Project!]!
+}
+
 type Token {
   accessToken: String!
-  onboarding: Boolean!
+  onboarding: Boolean
 }
 
 type Query {
+  fetchLocations: [Location!]!
+  fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
+  fetchRegions: [Region!]!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
@@ -57,9 +104,12 @@ type Query {
 
 type Mutation {
   login(email: String!, password: String!): Token!
-  restoreAccessToken: String!
+  restoreAccessToken: Token!
   logout: String!
+  createLocation(name: String!): Location!
+  createPlatform(name: String!): Platform!
   createPosition(name: String!): Position!
+  createRegion(name: String!): Region!
   createTendency(name: String!): Tendency!
   createType(name: String!): Type!
   sendTokenToEmail(email: String!): String!

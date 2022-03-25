@@ -54,7 +54,7 @@ export class UserService {
       `https://api-mail.cloud.toast.com/email/v2.0/appKeys/${appKey}/sender/mail`,
       {
         senderAddress: sender,
-        title: `팀플 이메일 인증번호입니다.`,
+        title: `팀플레이 이메일 인증번호입니다.`,
         body: template,
         receiverList: [
           {

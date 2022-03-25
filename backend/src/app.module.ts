@@ -11,11 +11,19 @@ import redisStore from 'cache-manager-redis-store';
 import { AuthModule } from './apis/auth/auth.module';
 import { PositionModule } from './apis/position/position.module';
 import { TypeModule } from './apis/type/type.module';
+import { ProjectModule } from './apis/project/project.module';
+import { LocationModule } from './apis/location/location.module';
+import { RegionModule } from './apis/region/region.module';
+import { PlatformModule } from './apis/platform/platform.module';
 
 @Module({
   imports: [
     AuthModule,
+    LocationModule,
+    PlatformModule,
     PositionModule,
+    ProjectModule,
+    RegionModule,
     TendencyModule,
     TypeModule,
     UserModule,
@@ -24,7 +32,7 @@ import { TypeModule } from './apis/type/type.module';
       autoSchemaFile: 'src/common/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: 'http://localhost:3000', //[process.env.CLIENT_URL],
+        origin: [process.env.CLIENT_URL, 'http://localhost:3000'],
         credentials: true,
       },
     }),

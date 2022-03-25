@@ -4,16 +4,16 @@ import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class Position {
+export class Platform {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id!: string;
 
-  @Column({ unique: true })
+  @Column()
   @Field(() => String)
   name!: string;
 
-  @ManyToMany(() => Project, project => project.positions)
+  @ManyToMany(() => Project, project => project.platforms)
   @Field(() => [Project])
   projects!: Project[];
 }
