@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors({
     origin: true,
-    allowedHeaders: ['Access-Control-Allow-Headers', 'Content-Type', 'Authorization'],
+    allowedHeaders: ['Access-Control-Allow-Headers', 'Access-Control-Allow-Origin', 'Content-Type', 'Authorization'],
     credentials: true,
   });
   await app.listen(3000);
