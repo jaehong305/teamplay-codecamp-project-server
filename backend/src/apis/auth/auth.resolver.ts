@@ -48,9 +48,9 @@ export class AuthResolver {
   }
 
   @UseGuards(GqlAuthRefeshGuard)
-  @Mutation(() => String)
+  @Mutation(() => Token)
   restoreAccessToken(@CurrentUser() currentUser: ICurrentUser) {
-    return this.authService.getAccessToken({ user: currentUser });
+    return { accessToken: this.authService.getAccessToken({ user: currentUser }) };
   }
 
   @UseGuards(GqlAuthAccessGuard)

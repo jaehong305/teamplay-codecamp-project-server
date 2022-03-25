@@ -5,6 +5,6 @@ export class Token {
   @Field(() => String)
   accessToken!: string;
 
-  @Field(() => Boolean)
-  onboarding!: boolean;
+  @Field(() => Boolean, { nullable: true })
+  onboarding?: boolean;
 }

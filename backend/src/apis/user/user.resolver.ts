@@ -30,7 +30,7 @@ export class UserResolver {
     if (this.userService.checkValidationEmail({ email })) {
       const mytoken = this.userService.getToken(6);
       const template = this.userService.getTemplateToken({ mytoken });
-      // await this.userService.sendEmail({ email, template });
+      await this.userService.sendEmail({ email, template });
       await this.cacheManager.set(email, mytoken, { ttl: 180000 });
       return `${email}으로 인증번호가 전송되었습니다. ${mytoken}`;
     } else {
