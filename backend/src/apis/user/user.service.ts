@@ -5,6 +5,7 @@ import { Position } from '../position/entities/position.entity';
 import { Tendency } from '../tendency/entities/tendency.entity';
 import { Type } from '../type/entities/type.entity';
 import { User } from './entities/user.entity';
+import axios from 'axios';
 
 @Injectable()
 export class UserService {
@@ -44,32 +45,32 @@ export class UserService {
     `;
   }
 
-  // async sendEmail({ email, template }) {
-  //   const appKey = process.env.EMAIL_APP_KEY;
-  //   const XSecretKey = process.env.EMAIL_X_SECRET_KEY;
-  //   const sender = process.env.EMAIL_SENDER;
+  async sendEmail({ email, template }) {
+    const appKey = process.env.EMAIL_APP_KEY;
+    const XSecretKey = process.env.EMAIL_X_SECRET_KEY;
+    const sender = process.env.EMAIL_SENDER;
 
-  //   await axios.post(
-  //     `https://api-mail.cloud.toast.com/email/v2.0/appKeys/${appKey}/sender/mail`,
-  //     {
-  //       senderAddress: sender,
-  //       title: `팀플 이메일 인증번호입니다.`,
-  //       body: template,
-  //       receiverList: [
-  //         {
-  //           receiveMailAddr: email,
-  //           receiveType: 'MRT0',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       headers: {
-  //         'X-Secret-Key': XSecretKey,
-  //         'Content-Type': 'application/json;charset=UTF-8',
-  //       },
-  //     },
-  //   );
-  // }
+    await axios.post(
+      `https://api-mail.cloud.toast.com/email/v2.0/appKeys/${appKey}/sender/mail`,
+      {
+        senderAddress: sender,
+        title: `팀플 이메일 인증번호입니다.`,
+        body: template,
+        receiverList: [
+          {
+            receiveMailAddr: email,
+            receiveType: 'MRT0',
+          },
+        ],
+      },
+      {
+        headers: {
+          'X-Secret-Key': XSecretKey,
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+      },
+    );
+  }
 
   async checkUser(email) {
     const users = await this.userRepository.findOne({

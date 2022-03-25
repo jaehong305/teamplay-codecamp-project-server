@@ -29,7 +29,7 @@ export class AuthService {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); //process.env.CLIENT_URL);
     res.setHeader(
       'Set-Cookie',
-      `refreshToken=${refreshToken}; path=/; domain=.backend.ljh305.shop; SameSite=None; Secure; httpOnly;`,
+      `refreshToken=${refreshToken}; path=/; domain=.ljh305.shop; SameSite=None; Secure; httpOnly;`,
     );
   }
 
