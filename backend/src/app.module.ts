@@ -24,7 +24,7 @@ import { TypeModule } from './apis/type/type.module';
       autoSchemaFile: 'src/common/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: true, //[process.env.CLIENT_URL],
+        origin: 'http://localhost:3000', //[process.env.CLIENT_URL],
         credentials: true,
       },
     }),
