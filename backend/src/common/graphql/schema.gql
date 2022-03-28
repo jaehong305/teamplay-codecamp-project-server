@@ -69,7 +69,7 @@ type Project {
   type: Type!
   location: Location!
   leader: User!
-  positions: [Position!]!
+  projectToPositions: [ProjectToPosition!]!
   platforms: [Platform!]!
   createdAt: DateTime!
   deletedAt: DateTime!
@@ -81,10 +81,17 @@ enum METHOD_ENUM {
   MEDIATE
 }
 
+type ProjectToPosition {
+  id: String!
+  project: Project!
+  position: Position!
+  number: Int!
+}
+
 type Position {
   id: String!
   name: String!
-  projects: [Project!]!
+  projectToPositions: [ProjectToPosition!]!
 }
 
 type Token {
@@ -96,6 +103,8 @@ type Query {
   fetchLocations: [Location!]!
   fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
+  fetchProject(projectId: String!): Project!
+  fetchProjects: [Project!]!
   fetchRegions: [Region!]!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
@@ -106,9 +115,11 @@ type Mutation {
   login(email: String!, password: String!): Token!
   restoreAccessToken: Token!
   logout: String!
+  uploadFile(files: [Upload!]!): [String!]!
   createLocation(name: String!): Location!
   createPlatform(name: String!): Platform!
   createPosition(name: String!): Position!
+  createProject(createProjectInput: CreateProjectInput!): Project!
   createRegion(name: String!): Region!
   createTendency(name: String!): Tendency!
   createType(name: String!): Type!
@@ -116,6 +127,25 @@ type Mutation {
   checkTokenToEmail(email: String!, token: String!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input CreateProjectInput {
+  name: String!
+  teamname: String!
+  intro: String!
+  method: METHOD_ENUM!
+  recruitDate: DateTime!
+  imgUrl: String!
+  skill: String!
+  description: String!
+  typeId: String!
+  locationId: String!
+  positionIds: [String!]!
+  numbers: [Int!]!
+  platformIds: [String!]!
 }
 
 input CreateUserInput {

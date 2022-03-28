@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Project } from 'src/apis/project/entities/project.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ProjectToPosition } from 'src/apis/project/entities/projectToPosition.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -13,7 +14,7 @@ export class Position {
   @Field(() => String)
   name!: string;
 
-  @ManyToMany(() => Project, project => project.positions)
-  @Field(() => [Project])
-  projects!: Project[];
+  @OneToMany(() => ProjectToPosition, projectToPositions => projectToPositions.position)
+  @Field(() => [ProjectToPosition])
+  projectToPositions!: ProjectToPosition[];
 }

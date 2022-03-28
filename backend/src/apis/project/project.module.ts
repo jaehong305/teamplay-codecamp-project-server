@@ -1,4 +1,17 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Location } from '../location/entities/location.entity';
+import { Platform } from '../platform/entities/platform.entity';
+import { Position } from '../position/entities/position.entity';
+import { Type } from '../type/entities/type.entity';
+import { User } from '../user/entities/user.entity';
+import { Project } from './entities/project.entity';
+import { ProjectToPosition } from './entities/projectToPosition.entity';
+import { ProjectResolver } from './project.resolver';
+import { ProjectService } from './project.service';
 
-@Module({})
+@Module({
+  imports: [TypeOrmModule.forFeature([Project, User, Type, Location, Position, Platform, ProjectToPosition])],
+  providers: [ProjectResolver, ProjectService],
+})
 export class ProjectModule {}

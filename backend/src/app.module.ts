@@ -15,10 +15,12 @@ import { ProjectModule } from './apis/project/project.module';
 import { LocationModule } from './apis/location/location.module';
 import { RegionModule } from './apis/region/region.module';
 import { PlatformModule } from './apis/platform/platform.module';
+import { FileModule } from './apis/file/file.module';
 
 @Module({
   imports: [
     AuthModule,
+    FileModule,
     LocationModule,
     PlatformModule,
     PositionModule,
