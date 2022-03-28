@@ -12,8 +12,10 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ProjectToPosition } from './projectToPosition.entity';
 
 export enum METHOD_ENUM {
   MEET = 'MEET',
@@ -79,10 +81,9 @@ export class Project {
   @Field(() => User)
   leader!: User;
 
-  @JoinTable()
-  @ManyToMany(() => Position, position => position.projects)
-  @Field(() => [Position])
-  positions!: Position[];
+  @OneToMany(() => ProjectToPosition, projectToPosition => projectToPosition.project)
+  @Field(() => [ProjectToPosition])
+  projectToPositions!: ProjectToPosition[];
 
   @JoinTable()
   @ManyToMany(() => Platform, platform => platform.projects)
