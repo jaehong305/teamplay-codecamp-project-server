@@ -104,7 +104,7 @@ type Query {
   fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
   fetchProject(projectId: String!): Project!
-  fetchProjects: [Project!]!
+  fetchProjects(page: Float!): [Project!]!
   fetchRegions: [Region!]!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
