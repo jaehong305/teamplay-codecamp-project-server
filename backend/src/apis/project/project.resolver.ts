@@ -16,8 +16,8 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project])
-  async fetchProjects() {
-    return this.projectService.find();
+  async fetchProjects(@Args('page') page: number) {
+    return this.projectService.find({ page });
   }
 
   @UseGuards(GqlAuthAccessGuard)

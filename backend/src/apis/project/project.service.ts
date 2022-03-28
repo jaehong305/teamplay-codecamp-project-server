@@ -41,8 +41,12 @@ export class ProjectService {
     });
   }
 
-  async find() {
-    return await this.projectRepository.find();
+  async find({ page }) {
+    return await this.projectRepository.find({
+      take: 12,
+      skip: 12 * (page - 1),
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async create({ leaderId, createProjectInput }) {
