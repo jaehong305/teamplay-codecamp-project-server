@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
 
@@ -10,6 +11,7 @@ async function bootstrap() {
     allowedHeaders: ['Access-Control-Allow-Headers', 'Access-Control-Allow-Origin', 'Content-Type', 'Authorization'],
     credentials: true,
   });
+  app.use(graphqlUploadExpress());
   await app.listen(3000);
 }
 bootstrap();

@@ -17,10 +17,12 @@ import { RegionModule } from './apis/region/region.module';
 import { PlatformModule } from './apis/platform/platform.module';
 import { FileModule } from './apis/file/file.module';
 import { PointPaymentModule } from './apis/pointPayment/pointPayment.module';
+import { ChatRoomModule } from './apis/chatRoom/chatRoom.module';
 
 @Module({
   imports: [
     AuthModule,
+    ChatRoomModule,
     FileModule,
     LocationModule,
     PlatformModule,
