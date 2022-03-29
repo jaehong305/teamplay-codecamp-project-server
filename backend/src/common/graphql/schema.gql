@@ -99,6 +99,18 @@ type Token {
   onboarding: Boolean
 }
 
+type PointPayment {
+  id: String!
+  impUid: String!
+  amount: Int!
+  status: POINT_PAYMENT_STATUS_ENUM!
+}
+
+enum POINT_PAYMENT_STATUS_ENUM {
+  PAYMENT
+  CANCEL
+}
+
 type Query {
   fetchLocations: [Location!]!
   fetchPlatforms: [Platform!]!
@@ -118,6 +130,8 @@ type Mutation {
   uploadFile(files: [Upload!]!): [String!]!
   createLocation(name: String!): Location!
   createPlatform(name: String!): Platform!
+  createPointPayment(impUid: String!, amount: Float!): PointPayment!
+  cancelPointPayment(impUid: String!): PointPayment!
   createPosition(name: String!): Position!
   createProject(createProjectInput: CreateProjectInput!): Project!
   createRegion(name: String!): Region!
