@@ -1,7 +1,6 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Location } from 'src/apis/location/entities/location.entity';
 import { Platform } from 'src/apis/platform/entities/platform.entity';
-import { Position } from 'src/apis/position/entities/position.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
 import { User } from 'src/apis/user/entities/user.entity';
 import {
