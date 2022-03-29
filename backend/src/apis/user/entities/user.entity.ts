@@ -7,12 +7,14 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Tendency } from 'src/apis/tendency/entities/tendency.entity';
 import { Position } from 'src/apis/position/entities/position.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
+import { ChatRoomMember } from 'src/apis/chatRoomMember/entities/chatRoomMember.entity';
 
 export enum CAREER_ENUM {
   STUDENT = 'STUDENT',
@@ -71,4 +73,8 @@ export class User {
   @ManyToMany(() => Type, type => type.users)
   @Field(() => [Type], { nullable: true })
   types?: Type[];
+
+  @OneToMany(() => ChatRoomMember, chatRoomMember => chatRoomMember.user)
+  @Field(() => [ChatRoomMember])
+  chatRoomMembers!: ChatRoomMember[];
 }

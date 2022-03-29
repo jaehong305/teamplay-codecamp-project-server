@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
+import { ChatRoomMember } from '../chatRoomMember/entities/chatRoomMember.entity';
 import { Location } from '../location/entities/location.entity';
 import { Platform } from '../platform/entities/platform.entity';
 import { Position } from '../position/entities/position.entity';
@@ -32,6 +34,12 @@ export class ProjectService {
 
     @InjectRepository(ProjectToPosition)
     private readonly projectToPositionRepository: Repository<ProjectToPosition>,
+
+    @InjectRepository(ChatRoom)
+    private readonly chatRoomRepository: Repository<ChatRoom>,
+
+    @InjectRepository(ChatRoomMember)
+    private readonly chatRoomMemberRepository: Repository<ChatRoomMember>,
   ) {}
 
   async findOne({ projectId }) {
@@ -75,6 +83,16 @@ export class ProjectService {
         });
       }),
     );
+
+    const chatRoom = await this.chatRoomRepository.save({
+      name: project.name,
+      project,
+    });
+
+    await this.chatRoomMemberRepository.save({
+      chatRoom,
+      user: leader,
+    });
 
     return project;
   }
