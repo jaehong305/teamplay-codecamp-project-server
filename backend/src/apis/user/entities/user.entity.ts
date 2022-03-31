@@ -14,7 +14,7 @@ import { IsEmail } from 'class-validator';
 import { Tendency } from 'src/apis/tendency/entities/tendency.entity';
 import { Position } from 'src/apis/position/entities/position.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
-import { ChatRoomMember } from 'src/apis/chatRoomMember/entities/chatRoomMember.entity';
+import { ChatRoomMember } from 'src/apis/chatRoom/entities/chatRoomMember.entity';
 
 export enum CAREER_ENUM {
   STUDENT = 'STUDENT',

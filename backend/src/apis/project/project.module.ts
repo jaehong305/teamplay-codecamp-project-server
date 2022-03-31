@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
-import { ChatRoomMember } from '../chatRoomMember/entities/chatRoomMember.entity';
+import { ChatRoomMember } from '../chatRoom/entities/chatRoomMember.entity';
 import { Location } from '../location/entities/location.entity';
 import { Platform } from '../platform/entities/platform.entity';
 import { Position } from '../position/entities/position.entity';
