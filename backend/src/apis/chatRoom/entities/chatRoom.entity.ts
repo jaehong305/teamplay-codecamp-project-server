@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { ChatRoomMember } from 'src/apis/chatRoomMember/entities/chatRoomMember.entity';
+import { Chat } from 'src/apis/chatRoom/entities/chat.entity';
+import { ChatRoomMember } from 'src/apis/chatRoom/entities/chatRoomMember.entity';
 import { Project } from 'src/apis/project/entities/project.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -18,6 +19,10 @@ export class ChatRoom {
   @OneToOne(() => Project)
   @Field(() => Project)
   project!: Project;
+
+  @OneToMany(() => Chat, chat => chat.chatRoom)
+  @Field(() => [Chat])
+  chat: Chat[];
 
   @OneToMany(() => ChatRoomMember, chatRoomMember => chatRoomMember.chatRoom)
   @Field(() => [ChatRoomMember])

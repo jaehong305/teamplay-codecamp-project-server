@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
-import { ChatRoomMember } from '../chatRoomMember/entities/chatRoomMember.entity';
+import { ChatRoomMember } from '../chatRoom/entities/chatRoomMember.entity';
 import { Location } from '../location/entities/location.entity';
 import { Platform } from '../platform/entities/platform.entity';
 import { Position } from '../position/entities/position.entity';
@@ -51,6 +51,7 @@ export class ProjectService {
 
   async find({ page }) {
     return await this.projectRepository.find({
+      relations: ['type'],
       take: 12,
       skip: 12 * (page - 1),
       order: { createdAt: 'DESC' },
