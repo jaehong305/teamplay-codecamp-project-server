@@ -1,4 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Board } from 'src/apis/board/entities/board.entity';
 import { Location } from 'src/apis/location/entities/location.entity';
 import { Platform } from 'src/apis/platform/entities/platform.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
@@ -96,4 +97,7 @@ export class Project {
   @DeleteDateColumn()
   @Field(() => Date)
   deletedAt!: Date;
+
+  @OneToMany(() => Board, (board) => board.user)
+  board: Board
 }
