@@ -19,6 +19,7 @@ import { FileModule } from './apis/file/file.module';
 import { PointPaymentModule } from './apis/pointPayment/pointPayment.module';
 import { ChatRoomModule } from './apis/chatRoom/chatRoom.module';
 import { EventModule } from './apis/event/event.module';
+import { BoardModule } from './apis/board/board.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { EventModule } from './apis/event/event.module';
     TendencyModule,
     TypeModule,
     UserModule,
+    BoardModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/common/graphql/schema.gql',

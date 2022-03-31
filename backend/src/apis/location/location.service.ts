@@ -7,14 +7,14 @@ import { Location } from './entities/location.entity';
 export class LocationService {
   constructor(
     @InjectRepository(Location)
-    private readonly lcoationRepository: Repository<Location>,
+    private readonly locationRepository: Repository<Location>,
   ) {}
 
   async findAll() {
-    return await this.lcoationRepository.find();
+    return await this.locationRepository.find();
   }
 
   async create({ name }) {
-    return await this.lcoationRepository.save({ name });
+    return await this.locationRepository.save({ name });
   }
 }
