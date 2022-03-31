@@ -1,8 +1,18 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { Project } from 'src/apis/project/entities/project.entity';
-import { Type } from 'src/apis/type/entities/type.entity';
 import { User } from 'src/apis/user/entities/user.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+
+export enum TASK_TYPE__ENUM {
+    DESIGN = 'DESIGN',
+    DEVELOPMENT = 'DEVELOPMENT',
+    PLANNING = 'PLANNING'
+  }
+
+registerEnumType(TASK_TYPE__ENUM, {
+    name: 'TASK_TYPE_ENUM'
+})
+  
 
 @Entity()
 @ObjectType()
@@ -19,7 +29,7 @@ export class Task {
     @Field(() => Date)
     limit: Date;
 
-    @Column()
+    @Column({default:0})
     @Field(() => Boolean)
     is_complete: boolean;
 
@@ -32,12 +42,20 @@ export class Task {
     @DeleteDateColumn()
     deletedAt: Date;
 
-    @ManyToOne(() => Type)
-    type: Type;
+    @Column({type:'enum', enum: TASK_TYPE__ENUM})
+    @Field(() => TASK_TYPE__ENUM)
+    taskType: TASK_TYPE__ENUM
 
-    @ManyToOne(() => User)
-    user: User;
+    @ManyToMany(() => User, user => user.task, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    })
+
+    @Field(() => [User])
+    users?: User[];
 
     @ManyToOne(() => Project)
     project: Project;
+
+
 }

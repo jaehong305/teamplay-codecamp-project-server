@@ -27,11 +27,11 @@ export class Board {
     @DeleteDateColumn()
     deletedAt: Date
 
-    @ManyToOne(() => User, (user) => user.board)
+    @ManyToOne(() => User)
     @Field(() => User)
     user: User
 
-    @ManyToOne(() => Project, (project) => project.board)
+    @ManyToOne(() => Project)
     @Field(() => Project)
     project: Project
 }

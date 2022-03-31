@@ -17,6 +17,7 @@ export class Tendency {
     cascade: true,
     onDelete: 'CASCADE',
   })
+
   @Field(() => [User])
   users?: User[];
 }

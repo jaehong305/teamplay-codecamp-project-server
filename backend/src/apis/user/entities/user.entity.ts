@@ -16,6 +16,7 @@ import { Position } from 'src/apis/position/entities/position.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
 import { ChatRoomMember } from 'src/apis/chatRoom/entities/chatRoomMember.entity';
 import { Board } from 'src/apis/board/entities/board.entity';
+import { Task } from 'src/apis/task/entities/task.entity';
 
 export enum CAREER_ENUM {
   STUDENT = 'STUDENT',
@@ -74,6 +75,11 @@ export class User {
   @ManyToMany(() => Type, type => type.users)
   @Field(() => [Type], { nullable: true })
   types?: Type[];
+
+  @JoinTable()
+  @ManyToMany(() => Task, task => task.users)
+  @Field(() => [Task], { nullable: true })
+  task?: Task[];
 
   @OneToMany(() => ChatRoomMember, chatRoomMember => chatRoomMember.user)
   @Field(() => [ChatRoomMember])

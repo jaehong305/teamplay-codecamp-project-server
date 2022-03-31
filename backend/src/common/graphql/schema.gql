@@ -42,6 +42,29 @@ type ChatRoomMember {
   user: User!
 }
 
+<<<<<<< HEAD
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Task {
+  id: String!
+  content: String!
+  limit: DateTime!
+  is_complete: Boolean!
+  taskType: TASK_TYPE_ENUM!
+  users: [User!]!
+}
+
+enum TASK_TYPE_ENUM {
+  DESIGN
+  DEVELOPMENT
+  PLANNING
+}
+
+=======
+>>>>>>> d7c620a8947df0d370d0feec260ac93f0ca372e5
 type User {
   id: String!
   email: String!
@@ -53,6 +76,7 @@ type User {
   tendencys: [Tendency!]
   position: Position
   types: [Type!]
+  task: [Task!]
   chatRoomMembers: [ChatRoomMember!]!
 }
 
@@ -153,6 +177,7 @@ type Query {
   fetchProject(projectId: String!): Project!
   fetchProjects(page: Float!): [Project!]!
   fetchRegions: [Region!]!
+  fetchTask(taskId: String!): Task!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
@@ -173,6 +198,9 @@ type Mutation {
   createPosition(name: String!): Position!
   createProject(createProjectInput: CreateProjectInput!): Project!
   createRegion(name: String!): Region!
+  createTask(createTaskInput: CreateTaskInput!, projectId: String!, taskTypeId: String!): Task!
+  updateTask(taskId: String!, updateTaskInput: UpdateTaskInput!): Task!
+  deleteTask(taskId: String!): Boolean!
   createTendency(name: String!): Tendency!
   createType(name: String!): Type!
   sendTokenToEmail(email: String!): String!
@@ -201,6 +229,16 @@ input CreateProjectInput {
   positionIds: [String!]!
   numbers: [Int!]!
   platformIds: [String!]!
+}
+
+input CreateTaskInput {
+  content: String!
+  limit: DateTime!
+}
+
+input UpdateTaskInput {
+  content: String
+  limit: DateTime
 }
 
 input CreateUserInput {

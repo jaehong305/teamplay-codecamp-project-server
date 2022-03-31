@@ -3,33 +3,44 @@ import { TaskService } from './task.service';
 import { Task } from './entities/task.entity';
 import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
+import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
 
 @Resolver()
 export class TaskResolver {
   constructor(private readonly taskService: TaskService) {}
 
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => Task)
+  async fetchTask(@Args('taskId') taskId: string) {
+    return await this.taskService.findOne({taskId});
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Task)
-  createTask(@Args('createTaskInput') createTaskInput: CreateTaskInput) {
-    return this.taskService.create(createTaskInput);
+  async createTask(
+    @Args('createTaskInput') createTaskInput: CreateTaskInput,
+    @Args('projectId') projectId: string,
+    @Args('taskTypeId') taskTypeId: string,
+    @CurrentUser() currentUser: ICurrentUser
+    ) {
+      const userId = currentUser.id
+    return await this.taskService.create({userId, projectId, createTaskInput});
   }
 
-  @Query(() => [Task], { name: 'task' })
-  findAll() {
-    return this.taskService.findAll();
-  }
-
-  @Query(() => Task, { name: 'task' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.taskService.findOne(id);
-  }
-
+  @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Task)
-  updateTask(@Args('updateTaskInput') updateTaskInput: UpdateTaskInput) {
-    return this.taskService.update(updateTaskInput.id, updateTaskInput);
+  async updateTask(
+    @Args('taskId') taskId: string,
+    @Args('updateTaskInput') updateTaskInput: UpdateTaskInput
+  ) {
+    return await this.taskService.update({taskId, updateTaskInput});
   }
 
-  @Mutation(() => Task)
-  removeTask(@Args('id', { type: () => Int }) id: number) {
-    return this.taskService.remove(id);
-  }
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Boolean)
+  async deleteTask(
+    @Args('taskId') taskId: string) {
+    return await this.taskService.delete({taskId})};
 }

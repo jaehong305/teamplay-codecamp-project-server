@@ -29,7 +29,7 @@ export class BoardService {
   private readonly boardRepository:Repository<Board>,
 
   @InjectRepository(User)
-  private readonly userepository:Repository<User>,
+  private readonly userRepository:Repository<User>,
 
   @InjectRepository(Project)
   private readonly projectRepository:Repository<Project>
@@ -42,7 +42,7 @@ export class BoardService {
   }
 
   async create({userId, projectId, createBoardInput}: ICreate) {
-    const user = await this.userepository.findOne({id:userId})
+    const user = await this.userRepository.findOne({id:userId})
     const project = await this.projectRepository.findOne({id:projectId})
     return await this.boardRepository.save({user:user,project:project, ...createBoardInput})
   }

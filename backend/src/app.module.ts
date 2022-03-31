@@ -20,6 +20,7 @@ import { PointPaymentModule } from './apis/pointPayment/pointPayment.module';
 import { ChatRoomModule } from './apis/chatRoom/chatRoom.module';
 import { EventModule } from './apis/event/event.module';
 import { BoardModule } from './apis/board/board.module';
+import { TaskModule } from './apis/task/task.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { BoardModule } from './apis/board/board.module';
     PositionModule,
     ProjectModule,
     RegionModule,
+    TaskModule,
     TendencyModule,
     TypeModule,
     UserModule,
