@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Project } from 'src/apis/project/entities/project.entity';
 import { ProjectToPosition } from 'src/apis/project/entities/projectToPosition.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
