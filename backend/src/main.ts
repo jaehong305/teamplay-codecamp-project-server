@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import { graphqlUploadExpress } from 'graphql-upload';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filter/http-exception.filter';
@@ -12,6 +13,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(graphqlUploadExpress());
+  app.useWebSocketAdapter(new IoAdapter(app));
   await app.listen(3000);
 }
 bootstrap();

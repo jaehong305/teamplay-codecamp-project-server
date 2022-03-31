@@ -25,15 +25,9 @@ type Tendency {
   users: [User!]!
 }
 
-type ChatRoom {
+type Chat {
   id: String!
-  name: String!
-  project: Project!
-  chatRoomMembers: [ChatRoomMember!]!
-}
-
-type ChatRoomMember {
-  id: String!
+  content: String!
   createdAt: DateTime!
   chatRoom: ChatRoom!
   user: User!
@@ -43,6 +37,21 @@ type ChatRoomMember {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type ChatRoom {
+  id: String!
+  name: String!
+  project: Project!
+  chat: [Chat!]!
+  chatRoomMembers: [ChatRoomMember!]!
+}
+
+type ChatRoomMember {
+  id: String!
+  createdAt: DateTime!
+  chatRoom: ChatRoom!
+  user: User!
+}
 
 type User {
   id: String!
@@ -127,6 +136,9 @@ enum POINT_PAYMENT_STATUS_ENUM {
 }
 
 type Query {
+  fetchChatRooms: [ChatRoom!]!
+  fetchChats(chatRoomId: String!, page: Float!): [Chat!]!
+  fetchChatRoomMembers(chatRoomId: String!): [ChatRoomMember!]!
   fetchLocations: [Location!]!
   fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
@@ -142,6 +154,8 @@ type Mutation {
   login(email: String!, password: String!): Token!
   restoreAccessToken: Token!
   logout: String!
+  joinChatRoom(projectId: String!): ChatRoomMember!
+  sendMessage(message: String!, chatRoomId: String!): String!
   uploadFile(files: [Upload!]!): [String!]!
   createLocation(name: String!): Location!
   createPlatform(name: String!): Platform!

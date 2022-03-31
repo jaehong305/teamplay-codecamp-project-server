@@ -6,7 +6,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 @Entity()
 @ObjectType()
 export class Chat {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('increment')
   @Field(() => String)
   id!: string;
 

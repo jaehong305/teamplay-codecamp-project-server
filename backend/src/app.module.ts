@@ -18,11 +18,13 @@ import { PlatformModule } from './apis/platform/platform.module';
 import { FileModule } from './apis/file/file.module';
 import { PointPaymentModule } from './apis/pointPayment/pointPayment.module';
 import { ChatRoomModule } from './apis/chatRoom/chatRoom.module';
+import { EventModule } from './apis/event/event.module';
 
 @Module({
   imports: [
     AuthModule,
     ChatRoomModule,
+    EventModule,
     FileModule,
     LocationModule,
     PlatformModule,
