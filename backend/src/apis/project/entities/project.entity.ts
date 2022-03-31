@@ -98,6 +98,6 @@ export class Project {
   @Field(() => Date)
   deletedAt!: Date;
 
-  @OneToMany(() => Board, (board) => board.user)
-  board: Board
+  @OneToMany(() => Board, board => board.user)
+  board: Board;
 }

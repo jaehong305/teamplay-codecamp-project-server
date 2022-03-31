@@ -17,6 +17,7 @@ import { Type } from 'src/apis/type/entities/type.entity';
 import { ChatRoomMember } from 'src/apis/chatRoom/entities/chatRoomMember.entity';
 import { Board } from 'src/apis/board/entities/board.entity';
 import { Task } from 'src/apis/task/entities/task.entity';
+import { Project } from 'src/apis/project/entities/project.entity';
 
 export enum CAREER_ENUM {
   STUDENT = 'STUDENT',
@@ -85,6 +86,6 @@ export class User {
   @Field(() => [ChatRoomMember])
   chatRoomMembers!: ChatRoomMember[];
 
-  @OneToMany(() => Board, (board) => board.user)
-  board: Board
+  @OneToMany(() => Board, board => board.user)
+  board: Board;
 }
