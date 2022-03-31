@@ -81,7 +81,7 @@ export class Project {
   @Field(() => User)
   leader!: User;
 
-  @OneToMany(() => ProjectToPosition, projectToPosition => projectToPosition.project)
+  @OneToMany(() => ProjectToPosition, projectToPosition => projectToPosition.project, { eager: true })
   @Field(() => [ProjectToPosition])
   projectToPositions!: ProjectToPosition[];
 
@@ -98,6 +98,11 @@ export class Project {
   @Field(() => Date)
   deletedAt!: Date;
 
-  @OneToMany(() => Board, (board) => board.user)
-  board: Board
+  @OneToMany(() => Board, board => board.user)
+  board: Board;
+
+  @JoinTable()
+  @ManyToMany(() => User)
+  @Field(() => [User], { nullable: true })
+  users?: User[];
 }

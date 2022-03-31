@@ -4,7 +4,18 @@ import { Project } from '../entities/project.entity';
 @InputType()
 export class CreateProjectInput extends OmitType(
   Project,
-  ['id', 'isComplete', 'createdAt', 'deletedAt', 'type', 'location', 'leader', 'projectToPositions', 'platforms'],
+  [
+    'id',
+    'isComplete',
+    'createdAt',
+    'deletedAt',
+    'type',
+    'location',
+    'leader',
+    'projectToPositions',
+    'platforms',
+    'users',
+  ],
   InputType,
 ) {
   @Field(() => String)
