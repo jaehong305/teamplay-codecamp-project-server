@@ -2,24 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Region {
-  id: String!
-  name: String!
-}
-
-type Location {
-  id: String!
-  name: String!
-  region: Region!
-}
-
-type Platform {
-  id: String!
-  name: String!
-  projects: [Project!]!
-}
-
 type Tendency {
+  id: String!
+  name: String!
+  users: [User!]!
+}
+
+type Type {
   id: String!
   name: String!
   users: [User!]!
@@ -64,10 +53,29 @@ enum CAREER_ENUM {
   NEWCOMER
 }
 
-type Type {
+type Board {
+  id: String!
+  title: String!
+  content: String!
+  user: User!
+  project: Project!
+}
+
+type Region {
   id: String!
   name: String!
-  users: [User!]!
+}
+
+type Location {
+  id: String!
+  name: String!
+  region: Region!
+}
+
+type Platform {
+  id: String!
+  name: String!
+  projects: [Project!]!
 }
 
 type Project {
@@ -136,6 +144,7 @@ type Query {
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
+  fetchBoard(boardId: String!): Board!
 }
 
 type Mutation {
@@ -156,6 +165,9 @@ type Mutation {
   checkTokenToEmail(email: String!, token: String!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
+  createBoard(createBoardInput: CreateBoardInput!, projectId: String!): Board!
+  updateBoard(boardId: String!, updateBoardInput: UpdateBoardInput!): Board!
+  deleteBoard(boardId: String!): Boolean!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -188,4 +200,14 @@ input UpdateUserOnboardInput {
   tendencyId: [String!]!
   positionId: String!
   typeId: [String!]!
+}
+
+input CreateBoardInput {
+  title: String!
+  content: String!
+}
+
+input UpdateBoardInput {
+  title: String
+  content: String
 }

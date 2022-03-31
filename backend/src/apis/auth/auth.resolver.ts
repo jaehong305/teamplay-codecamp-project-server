@@ -6,7 +6,7 @@ import { UserService } from '../user/user.service';
 import { GqlAuthAccessGuard, GqlAuthRefeshGuard } from 'src/common/auth/gql-auth.guard';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
 import { IContext } from 'src/common/types/context';
-import { getToday } from 'src/common/libraries/utils';
+import { getToday } from 'src/common/graphql/libraries/utils';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Token } from './dto/token';
