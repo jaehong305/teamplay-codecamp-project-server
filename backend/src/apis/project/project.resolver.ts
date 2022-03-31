@@ -3,6 +3,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
 import { CreateProjectInput } from './dto/createProject.input';
+import { StartProjectInput } from './dto/startProject.input';
 import { Project } from './entities/project.entity';
 import { ProjectService } from './project.service';
 
@@ -27,5 +28,14 @@ export class ProjectResolver {
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
   ) {
     return await this.projectService.create({ leaderId: currentUser.id, createProjectInput });
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Project)
+  async startProject(
+    @CurrentUser() currentUser: ICurrentUser,
+    @Args('startProjectInput') startProjectInput: StartProjectInput,
+  ) {
+    await this.projectService.createProjectMember({ startProjectInput, leaderId: currentUser.id });
   }
 }

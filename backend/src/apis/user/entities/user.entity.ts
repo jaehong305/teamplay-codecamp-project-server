@@ -88,4 +88,8 @@ export class User {
 
   @OneToMany(() => Board, board => board.user)
   board: Board;
+
+  @ManyToMany(() => Project, project => project.users)
+  @Field(() => [Project])
+  projects?: Project[];
 }
