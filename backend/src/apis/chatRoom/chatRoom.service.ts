@@ -83,7 +83,7 @@ export class ChatRoomService {
       user,
       chatRoom: chatRoomId,
     });
-    this.eventGateWay.server.to(chatRoomId).emit('message', chat);
+    this.eventGateWay.server.emit('message' + chatRoomId, chat);
     return '채팅저장성공';
   }
 }
