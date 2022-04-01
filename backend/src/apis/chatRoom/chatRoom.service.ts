@@ -83,8 +83,7 @@ export class ChatRoomService {
       user,
       chatRoom: chatRoomId,
     });
-    this.eventGateWay.server.emit('message', chat);
-    console.log('aaaaa');
+    this.eventGateWay.server.to(chatRoomId).emit('message', chat);
     return '채팅저장성공';
   }
 }
