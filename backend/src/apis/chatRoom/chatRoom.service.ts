@@ -49,7 +49,7 @@ export class ChatRoomService {
       .createQueryBuilder('chat')
       .where('chat.chatRoom = :chatRoomId', { chatRoomId })
       .innerJoinAndSelect('chat.user', 'user')
-      .orderBy('chat.id', 'DESC')
+      .orderBy('chat.id', 'ASC')
       .take(20)
       .skip(20 * (page - 1))
       .getMany();
@@ -83,6 +83,8 @@ export class ChatRoomService {
       user,
       chatRoom: chatRoomId,
     });
-    this.eventGateWay.server.emit('message' + chatRoomId, chat);
+    this.eventGateWay.server.emit('message', chat);
+    console.log('aaaaa');
+    return '채팅저장성공';
   }
 }

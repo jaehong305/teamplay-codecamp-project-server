@@ -70,6 +70,7 @@ type User {
   types: [Type!]
   task: [Task!]
   chatRoomMembers: [ChatRoomMember!]!
+  projects: [Project!]!
 }
 
 enum CAREER_ENUM {
@@ -121,6 +122,7 @@ type Project {
   platforms: [Platform!]!
   createdAt: DateTime!
   deletedAt: DateTime!
+  users: [User!]
 }
 
 enum METHOD_ENUM {
@@ -189,6 +191,7 @@ type Mutation {
   cancelPointPayment(impUid: String!): PointPayment!
   createPosition(name: String!): Position!
   createProject(createProjectInput: CreateProjectInput!): Project!
+  startProject(startProjectInput: StartProjectInput!): Project!
   createRegion(name: String!): Region!
   createTask(createTaskInput: CreateTaskInput!, projectId: String!, taskTypeId: String!): Task!
   updateTask(taskId: String!, updateTaskInput: UpdateTaskInput!): Task!
@@ -221,6 +224,11 @@ input CreateProjectInput {
   positionIds: [String!]!
   numbers: [Int!]!
   platformIds: [String!]!
+}
+
+input StartProjectInput {
+  projectId: String!
+  userIds: [String!]!
 }
 
 input CreateTaskInput {

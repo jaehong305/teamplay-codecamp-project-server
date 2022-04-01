@@ -47,7 +47,6 @@ export class ChatRoomResolver {
     @CurrentUser() currentUser: ICurrentUser,
     @Args('chatRoomId') chatRoomId: string,
   ) {
-    await this.chatRoomService.createChat({ message, id: currentUser.id, chatRoomId });
-    return '전송완료';
+    return await this.chatRoomService.createChat({ message, id: currentUser.id, chatRoomId });
   }
 }

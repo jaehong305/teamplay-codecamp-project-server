@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
@@ -96,5 +96,10 @@ export class ProjectService {
     });
 
     return project;
+  }
+
+  async createProjectMember({ startProjectInput, leaderId }) {
+    const project = await this.projectRepository.findOne({ id: startProjectInput.projectId });
+    if (leaderId !== project.id) throw new BadRequestException('프로젝트 리더만 프로젝트시작이 가능합니다.');
   }
 }
