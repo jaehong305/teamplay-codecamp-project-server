@@ -22,6 +22,10 @@ export class EventGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   @SubscribeMessage('front')
   handleEvent(@MessageBody() data, @ConnectedSocket() client: Socket) {
     client.emit('back', data, client.id);
+    data.channels.forEach(channel => {
+      console.log('join', channel);
+      client.join(channel);
+    });
   }
 
   afterInit(server: Server) {
