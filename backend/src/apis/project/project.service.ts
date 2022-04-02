@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
@@ -45,7 +45,7 @@ export class ProjectService {
   async findOne({ projectId }) {
     return await this.projectRepository.findOne({
       where: { id: projectId },
-      relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms'],
+      relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms', 'users'],
     });
   }
 
@@ -98,8 +98,44 @@ export class ProjectService {
     return project;
   }
 
-  async createProjectMember({ startProjectInput, leaderId }) {
-    const project = await this.projectRepository.findOne({ id: startProjectInput.projectId });
+  async createProjectMember({ projectId, userIds, leaderId, point }) {
+    const project = await this.projectRepository.findOne({ id: projectId });
+    if (project.isStart) throw new ConflictException('이미 시작된 프로젝트입니다.');
     if (leaderId !== project.id) throw new BadRequestException('프로젝트 리더만 프로젝트시작이 가능합니다.');
+
+    userIds.push(leaderId);
+
+    const users = await Promise.all(
+      userIds.map(userId => {
+        return this.userRepository.findOne({ id: userId });
+      }),
+    );
+
+    const failUsers = [];
+    users.forEach(user => {
+      if (user.point < point) {
+        failUsers.push(user);
+      }
+    });
+
+    if (failUsers.length !== 0) {
+      let string = '';
+      failUsers.forEach(failUser => {
+        string += `${failUser.name}(${failUser.point}) `;
+      });
+      throw new ConflictException(`가진 포인트가 부족한 회원이 있습니다. ${string}`);
+    }
+
+    await Promise.all(
+      users.map(user => {
+        return this.userRepository.update({ id: user.id }, { point: user.point - point });
+      }),
+    );
+
+    return await this.projectRepository.save({
+      ...project,
+      users,
+      isStart: true,
+    });
   }
 }

@@ -69,6 +69,10 @@ export class Project {
   @Field(() => Boolean)
   isComplete!: boolean;
 
+  @Column({ default: false })
+  @Field(() => Boolean)
+  isStart!: boolean;
+
   @ManyToOne(() => Type, { cascade: true, onDelete: 'CASCADE' })
   @Field(() => Type)
   type!: Type;

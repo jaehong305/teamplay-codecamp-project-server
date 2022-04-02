@@ -7,6 +7,7 @@ export class CreateProjectInput extends OmitType(
   [
     'id',
     'isComplete',
+    'isStart',
     'createdAt',
     'deletedAt',
     'type',
