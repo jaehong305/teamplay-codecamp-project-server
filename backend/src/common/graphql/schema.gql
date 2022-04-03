@@ -178,6 +178,7 @@ type Query {
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
+  fetchUsers: [User!]!
   fetchBoards: [Board!]!
   fetchBoard(boardId: String!): Board!
 }

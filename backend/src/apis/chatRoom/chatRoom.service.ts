@@ -34,12 +34,16 @@ export class ChatRoomService {
     const chatRoom = await this.chatRoomRepository
       .createQueryBuilder('chatRoom')
       .innerJoin('chatRoom.chatRoomMembers', 'chatRoomMembers', 'chatRoomMembers.user = :user', { user: id })
+      .innerJoinAndSelect('chatRoom.project', 'project')
+      .innerJoinAndSelect('project.leader', 'leader')
       // .leftJoinAndSelect(aaa, 'chat', 'chat.chatRoomId = chatRoom.id')
       // .where(qb => {
       //   const aaa = qb.subQuery().select('chatRoomId').from(Chat, 'chat').limit(1).getQuery();
       //   return 'chatRoom.id = ' + aaa;
       // })
       .getMany();
+
+    console.log(chatRoom);
 
     return chatRoom;
   }
