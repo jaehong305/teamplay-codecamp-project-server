@@ -20,6 +20,17 @@ export class ProjectResolver {
     return this.projectService.find({ page });
   }
 
+  @Query(() => Number)
+  async fetchProjectCounts() {
+    return this.projectService.findCount();
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => [Project])
+  async fetchMyProjects(@CurrentUser() currentUser: ICurrentUser) {
+    return await this.projectService.findMyProjects({ currentUser });
+  }
+
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Project)
   async createProject(

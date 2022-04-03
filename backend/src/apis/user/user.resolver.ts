@@ -25,8 +25,8 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  async fetchUsers() {
-    return await this.userService.findAll();
+  async fetchUsers(@Args('page') page: number) {
+    return await this.userService.findAll({ page });
   }
 
   @Mutation(() => String)

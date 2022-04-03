@@ -19,6 +19,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ProjectToPosition } from './projectToPosition.entity';
+import { ProjectMember } from './projectMember.entity';
+import { Task } from 'src/apis/task/entities/task.entity';
 
 export enum METHOD_ENUM {
   MEET = 'MEET',
@@ -116,10 +118,12 @@ export class Project {
   @OneToMany(() => Board, board => board.user)
   board: Board;
 
-  @JoinTable()
-  @ManyToMany(() => User)
-  @Field(() => [User], { nullable: true })
-  users?: User[];
+  @OneToMany(() => Task, task => task.project)
+  task: Task;
+
+  @OneToMany(() => ProjectMember, projectMember => projectMember.project)
+  @Field(() => [ProjectMember], { nullable: true })
+  projectMembers?: ProjectMember[];
 
   @OneToOne(() => ChatRoom, chatRoom => chatRoom.project)
   chatRoom!: ChatRoom;

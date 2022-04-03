@@ -28,22 +28,26 @@ export class ChatRoomService {
     //   .subQuery()
     //   .select('chat.chatRoom as chatRoomId')
     //   .from(Chat, 'chat')
-    //   .limit(1)
+    //   .orderBy('chat.id', 'DESC')
     //   .getQuery();
+
+    // console.log(aaa);
 
     const chatRoom = await this.chatRoomRepository
       .createQueryBuilder('chatRoom')
       .innerJoin('chatRoom.chatRoomMembers', 'chatRoomMembers', 'chatRoomMembers.user = :user', { user: id })
       .innerJoinAndSelect('chatRoom.project', 'project')
       .innerJoinAndSelect('project.leader', 'leader')
-      // .leftJoinAndSelect(aaa, 'chat', 'chat.chatRoomId = chatRoom.id')
+      .leftJoinAndSelect('chatRoom.chat', 'chat')
+      .orderBy('chat.createdAt', 'DESC')
+      //.leftJoinAndSelect(aaa, 'chat', 'chat.chatRoomId = chatRoom.id')
       // .where(qb => {
       //   const aaa = qb.subQuery().select('chatRoomId').from(Chat, 'chat').limit(1).getQuery();
       //   return 'chatRoom.id = ' + aaa;
       // })
       .getMany();
 
-    console.log(chatRoom);
+    // console.log(chatRoom);
 
     return chatRoom;
   }
@@ -85,7 +89,12 @@ export class ChatRoomService {
   async createChat({ message, id, chatRoomId }) {
     const user = await this.userRepository.findOne({ id });
 
-    const previousChat = await this.chatRepository.findOne({ where: { chatRoom: chatRoomId }, relations: ['user'] });
+    const previousChat = await this.chatRepository
+      .createQueryBuilder('chat')
+      .innerJoinAndSelect('chat.user', 'user')
+      .where({ chatRoom: chatRoomId })
+      .orderBy('chat.id', 'DESC')
+      .getOne();
 
     const chat = await this.chatRepository.save({
       content: message,
@@ -97,7 +106,6 @@ export class ChatRoomService {
       previousChat,
       chat,
     };
-    console.log(chatData);
 
     this.eventGateWay.server.emit('message' + chatRoomId, chatData);
     return '채팅저장성공';
