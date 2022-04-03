@@ -63,6 +63,10 @@ export class User {
   @Field(() => Int)
   point!: number;
 
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true })
+  imgUrl?: string;
+
   @JoinTable()
   @ManyToMany(() => Tendency, tendency => tendency.users)
   @Field(() => [Tendency], { nullable: true })

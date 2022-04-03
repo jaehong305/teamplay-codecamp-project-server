@@ -71,6 +71,7 @@ type User {
   deletedAt: DateTime
   career: CAREER_ENUM
   point: Int!
+  imgUrl: String
   tendencys: [Tendency!]
   position: Position
   types: [Type!]
@@ -220,6 +221,8 @@ type Mutation {
   checkTokenToEmail(email: String!, token: String!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
+  updateUser(name: String!, password: String!, changePassword: String!): User!
+  deleteUser: Boolean!
   createBoard(title: String!, content: String!, projectId: String!): Board!
   updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!
@@ -252,6 +255,7 @@ input CreateUserInput {
 
 input UpdateUserOnboardInput {
   career: CAREER_ENUM
+  imgUrl: String
   tendencyId: [String!]!
   positionId: String!
   typeId: [String!]!
