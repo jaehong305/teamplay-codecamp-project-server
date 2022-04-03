@@ -24,6 +24,11 @@ export class UserResolver {
     return await this.userService.findOne({ email: currentUser.email });
   }
 
+  @Query(() => [User])
+  async fetchUsers() {
+    return await this.userService.findAll();
+  }
+
   @Mutation(() => String)
   async sendTokenToEmail(@Args('email') email: string) {
     await this.userService.checkUser(email);
@@ -50,10 +55,10 @@ export class UserResolver {
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     const checkEmail = await this.cacheManager.get(createUserInput.email);
-    console.log(checkEmail)
+    console.log(checkEmail);
     if (checkEmail !== true) throw new UnauthorizedException('이메일을 인증해주세요.');
     await this.userService.checkUser(createUserInput.email);
-    
+
     createUserInput.password = await bcrypt.hash(createUserInput.password, 10);
     await this.cacheManager.set(createUserInput.email, false, { ttl: 0 });
     return await this.userService.create({ createUserInput });

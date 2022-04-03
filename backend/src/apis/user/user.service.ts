@@ -27,6 +27,10 @@ export class UserService {
     });
   }
 
+  async findAll() {
+    await this.userRepository.find();
+  }
+
   checkValidationEmail({ email }) {
     return email.includes('@') && email.includes('.');
   }
