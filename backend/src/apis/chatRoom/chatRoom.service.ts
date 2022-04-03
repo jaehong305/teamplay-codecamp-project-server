@@ -65,9 +65,12 @@ export class ChatRoomService {
 
   async createChatRoomMembers({ userId, projectId }) {
     const chatRoom = await this.chatRoomRepository.findOne({ project: projectId });
-    const user = await this.userRepository.findOne({ id: userId });
-    const chatRoomUser = await this.chatRoomMemberRepository.findOne({ user: userId });
+
+    const chatRoomUser = await this.chatRoomMemberRepository.findOne({ user: userId, chatRoom });
     if (chatRoomUser) throw new BadRequestException('이미 참여중인 회원입니다');
+
+    const user = await this.userRepository.findOne({ id: userId });
+
     this.eventGateWay.server.emit('join' + chatRoom.id, user);
     return await this.chatRoomMemberRepository.save({
       chatRoom,

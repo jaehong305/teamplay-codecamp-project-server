@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
@@ -98,8 +98,9 @@ export class ProjectService {
     return project;
   }
 
-  async createProjectMember({ projectId, userIds, leaderId, point }) {
-    const project = await this.projectRepository.findOne({ id: projectId });
+  async createProjectMember({ chatRoomId, userIds, leaderId, point }) {
+    const chatRoom = await this.chatRoomRepository.findOne({ where: { id: chatRoomId }, relations: ['project'] });
+    const project = await this.projectRepository.findOne({ id: chatRoom.project.id });
     if (project.isStart) throw new ConflictException('이미 시작된 프로젝트입니다.');
     if (leaderId !== project.id) throw new BadRequestException('프로젝트 리더만 프로젝트시작이 가능합니다.');
 
@@ -136,6 +137,18 @@ export class ProjectService {
       ...project,
       users,
       isStart: true,
+      point,
     });
+  }
+
+  async deleteAll() {
+    await this.chatRoomRepository.delete({});
+    const result = await this.projectRepository.delete({});
+    return result.affected ? true : false;
+  }
+
+  async delete({ projectId }) {
+    const result = await this.projectRepository.softDelete({ id: projectId });
+    return result.affected ? true : false;
   }
 }

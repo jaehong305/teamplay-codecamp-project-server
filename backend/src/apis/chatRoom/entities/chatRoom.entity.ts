@@ -16,7 +16,7 @@ export class ChatRoom {
   name!: string;
 
   @JoinColumn()
-  @OneToOne(() => Project)
+  @OneToOne(() => Project, project => project.chatRoom, { onDelete: 'CASCADE' })
   @Field(() => Project)
   project!: Project;
 
