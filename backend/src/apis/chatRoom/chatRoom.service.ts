@@ -65,10 +65,13 @@ export class ChatRoomService {
   }
 
   async findChatRoomMembers({ chatRoomId }) {
-    return await this.chatRoomMemberRepository.find({
-      where: { chatRoom: chatRoomId },
-      relations: ['user'],
-    });
+    return await this.chatRoomMemberRepository
+      .createQueryBuilder('chatRoomMember')
+      .where('chatRoomMember.chatRoom = :chatRoomId', { chatRoomId })
+      .innerJoinAndSelect('chatRoomMember.user', 'user')
+      .leftJoinAndSelect('user.tendencys', 'tendencys')
+      .leftJoinAndSelect('user.position', 'position')
+      .getMany();
   }
 
   async createChatRoomMembers({ userId, projectId }) {
