@@ -18,7 +18,7 @@ export class PointPayment {
     id: string;
 
     @Column()
-    @Field(() => String)
+    @Field(() => String, {nullable: true})
     impUid: string;
 
     @Column()
