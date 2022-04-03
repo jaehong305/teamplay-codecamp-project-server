@@ -116,9 +116,11 @@ export class Project {
   deletedAt!: Date;
 
   @OneToMany(() => Board, board => board.user)
+  @Field(() => Board)
   board: Board;
 
   @OneToMany(() => Task, task => task.project)
+  @Field(() => Task)
   task: Task;
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.project)
