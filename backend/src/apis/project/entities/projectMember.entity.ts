@@ -14,7 +14,7 @@ export class ProjectMember {
   @Field(() => User)
   user!: User;
 
-  @ManyToOne(() => Project, project => project.projectMembers)
+  @ManyToOne(() => Project, project => project.projectMembers, { cascade: true, onDelete: 'CASCADE' })
   @Field(() => User)
   project!: Project;
 }
