@@ -114,6 +114,7 @@ type Project {
   skill: String!
   description: String!
   isComplete: Boolean!
+  isStart: Boolean!
   type: Type!
   location: Location!
   leader: User!
@@ -192,7 +193,7 @@ type Mutation {
   cancelPointPayment(impUid: String!): PointPayment!
   createPosition(name: String!): Position!
   createProject(createProjectInput: CreateProjectInput!): Project!
-  startProject(startProjectInput: StartProjectInput!): Project!
+  startProject(projectId: String!, userIds: [String!]!, point: Float!): Project!
   createRegion(name: String!): Region!
   createTask(content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!, dutyMember: [String!]!, projectId: String!): Task!
   updateTask(taskId: String!, content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!, dutyMember: [String!]!): Task!
@@ -227,9 +228,20 @@ input CreateProjectInput {
   platformIds: [String!]!
 }
 
+<<<<<<< HEAD
 input StartProjectInput {
   projectId: String!
   userIds: [String!]!
+=======
+input CreateTaskInput {
+  content: String!
+  limit: DateTime!
+}
+
+input UpdateTaskInput {
+  content: String
+  limit: DateTime
+>>>>>>> ed2c992b22518725adc0f62164f7036d5e2c309d
 }
 
 input CreateUserInput {
