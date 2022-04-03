@@ -9,6 +9,7 @@ import { Position } from '../position/entities/position.entity';
 import { Type } from '../type/entities/type.entity';
 import { User } from '../user/entities/user.entity';
 import { Project } from './entities/project.entity';
+import { ProjectMember } from './entities/projectMember.entity';
 import { ProjectToPosition } from './entities/projectToPosition.entity';
 
 @Injectable()
@@ -40,12 +41,15 @@ export class ProjectService {
 
     @InjectRepository(ChatRoomMember)
     private readonly chatRoomMemberRepository: Repository<ChatRoomMember>,
+
+    @InjectRepository(ProjectMember)
+    private readonly projectMemberRepository: Repository<ProjectMember>,
   ) {}
 
   async findOne({ projectId }) {
     return await this.projectRepository.findOne({
       where: { id: projectId },
-      relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms', 'users'],
+      relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms', 'users', 'board', 'task'],
     });
   }
 
@@ -56,6 +60,19 @@ export class ProjectService {
       skip: 12 * (page - 1),
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async findCount() {
+    return await this.projectRepository.count();
+  }
+
+  async findMyProjects({ currentUser }) {
+    return await this.projectRepository
+      .createQueryBuilder('project')
+      .innerJoin('project.projectMembers', 'projectMembers', 'projectMembers.user = :userId', {
+        userId: currentUser.id,
+      })
+      .getMany();
   }
 
   async create({ leaderId, createProjectInput }) {
@@ -100,9 +117,9 @@ export class ProjectService {
 
   async createProjectMember({ chatRoomId, userIds, leaderId, point }) {
     const chatRoom = await this.chatRoomRepository.findOne({ where: { id: chatRoomId }, relations: ['project'] });
-    const project = await this.projectRepository.findOne({ id: chatRoom.project.id });
+    const project = await this.projectRepository.findOne({ where: { id: chatRoom.project.id }, relations: ['leader'] });
     if (project.isStart) throw new ConflictException('이미 시작된 프로젝트입니다.');
-    if (leaderId !== project.id) throw new BadRequestException('프로젝트 리더만 프로젝트시작이 가능합니다.');
+    if (leaderId !== project.leader.id) throw new BadRequestException('프로젝트 리더만 프로젝트시작이 가능합니다.');
 
     userIds.push(leaderId);
 
@@ -133,12 +150,22 @@ export class ProjectService {
       }),
     );
 
-    return await this.projectRepository.save({
+    await Promise.all(
+      users.map(user => {
+        return this.projectMemberRepository.save({
+          project,
+          user,
+        });
+      }),
+    );
+
+    await this.projectRepository.save({
       ...project,
-      users,
       isStart: true,
       point,
     });
+
+    return await this.projectRepository.findOne({ where: { id: project.id }, relations: ['projectMembers'] });
   }
 
   async deleteAll() {

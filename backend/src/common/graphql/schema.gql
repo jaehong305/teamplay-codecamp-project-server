@@ -56,6 +56,12 @@ enum TASK_TYPE_ENUM {
   PLANNING
 }
 
+type ProjectMember {
+  id: String!
+  user: User!
+  project: User!
+}
+
 type User {
   id: String!
   email: String!
@@ -69,7 +75,7 @@ type User {
   types: [Type!]
   task: [Task!]
   chatRoomMembers: [ChatRoomMember!]!
-  projects: [Project!]!
+  projectMembers: [ProjectMember!]
 }
 
 enum CAREER_ENUM {
@@ -124,7 +130,7 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  users: [User!]
+  projectMembers: [ProjectMember!]
 }
 
 enum METHOD_ENUM {
@@ -172,13 +178,15 @@ type Query {
   fetchPositions: [Position!]!
   fetchProject(projectId: String!): Project!
   fetchProjects(page: Float!): [Project!]!
+  fetchProjectCounts: Float!
+  fetchMyProjects: [Project!]!
   fetchRegions: [Region!]!
   fetchTasks: [Task!]!
   fetchTask(taskId: String!): Task!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
-  fetchUsers: [User!]!
+  fetchUsers(page: Float!): [User!]!
   fetchBoards: [Board!]!
   fetchBoard(boardId: String!): Board!
 }

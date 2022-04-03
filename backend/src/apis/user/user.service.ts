@@ -6,6 +6,7 @@ import { Tendency } from '../tendency/entities/tendency.entity';
 import { Type } from '../type/entities/type.entity';
 import { User } from './entities/user.entity';
 import axios from 'axios';
+import { ProjectMember } from '../project/entities/projectMember.entity';
 
 @Injectable()
 export class UserService {
@@ -27,8 +28,12 @@ export class UserService {
     });
   }
 
-  async findAll() {
-    await this.userRepository.find();
+  async findAll({ page }) {
+    return await this.userRepository.find({
+      relations: ['tendencys', 'position'],
+      take: 15,
+      skip: 15 * (page - 1),
+    });
   }
 
   checkValidationEmail({ email }) {
