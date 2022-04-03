@@ -3,24 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from '../project/entities/project.entity';
 import { User } from '../user/entities/user.entity';
-import { CreateTaskInput } from './dto/create-task.input';
-import { UpdateTaskInput } from './dto/update-task.input';
-import { Task } from './entities/task.entity';
-
-interface IFindOne {
-  taskId: string;
-}
-
-interface ICreate {
-  userId: string
-  projectId: string
-  createTaskInput: CreateTaskInput;
-}
-
-interface IUpdate {
-  taskId: string;
-  updateTaskInput: UpdateTaskInput;
-}
+import { Task, TASK_TYPE_ENUM } from './entities/task.entity';
 
 @Injectable()
 export class TaskService {
@@ -35,22 +18,33 @@ export class TaskService {
     private readonly projectRepository:Repository<Project>
   ){}
 
-  async findOne({taskId}: IFindOne) {
+  async findAll() {
+    return await this.taskRepository.find();
+  }
+
+  async findOne({taskId}) {
     return await this.taskRepository.findOne({id:taskId})
   }
 
-  async create({userId, projectId, createTaskInput}: ICreate) {
-    const user = await this.userRepository.findOne({id:userId})
-    const project = await this.projectRepository.findOne({id:projectId})
-    return await this.taskRepository.save({user:user,project:project, ...createTaskInput})
+  // 업무 추가하기 기능
+  async create({ createUser, content, limit, taskType, dutyMember, project }) {
+    const writer = await this.userRepository.findOne({id:createUser})
+    const dutymember= await this.userRepository.find({id: dutyMember})
+    const projectId = await this.projectRepository.findOne({id: project})
+    return await this.taskRepository.save({user:writer, content, limit, taskType, dutyMember: dutymember, project: projectId})
   }
 
-  async update( {taskId, updateTaskInput}: IUpdate) {
+  async update( {taskId, updateUser, content, limit, taskType, dutyMember}) {
     const task = await this.taskRepository.findOne({id: taskId})
     const newTask = {
       ...task,
-      ...updateTaskInput
+      updateUser,
+      content,
+      limit,
+      taskType,
+      dutyMember
     }
+    console.log
     return await this.taskRepository.save(newTask)
   }
 

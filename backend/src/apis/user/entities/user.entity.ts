@@ -78,7 +78,7 @@ export class User {
   types?: Type[];
 
   @JoinTable()
-  @ManyToMany(() => Task, task => task.users)
+  @ManyToMany(() => Task)
   @Field(() => [Task], { nullable: true })
   task?: Task[];
 

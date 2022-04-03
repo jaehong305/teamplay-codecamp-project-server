@@ -88,7 +88,7 @@ export class PointPaymentService {
     await queryRunner.startTransaction('SERIALIZABLE');
     try {
       // 1. pointPayment 테이블에 거래기록 생성
-      const pointPayment = await this.pointPaymentRepository.create({
+      const pointPayment = this.pointPaymentRepository.create({
         impUid: impUid,
         amount: amount,
         user: currentUser,

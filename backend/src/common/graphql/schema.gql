@@ -46,9 +46,8 @@ type Task {
   id: String!
   content: String!
   limit: DateTime!
-  is_complete: Boolean!
   taskType: TASK_TYPE_ENUM!
-  users: [User!]!
+  is_complete: Boolean!
 }
 
 enum TASK_TYPE_ENUM {
@@ -152,7 +151,7 @@ type Token {
 
 type PointPayment {
   id: String!
-  impUid: String!
+  impUid: String
   amount: Int!
   status: POINT_PAYMENT_STATUS_ENUM!
 }
@@ -172,10 +171,12 @@ type Query {
   fetchProject(projectId: String!): Project!
   fetchProjects(page: Float!): [Project!]!
   fetchRegions: [Region!]!
+  fetchTasks: [Task!]!
   fetchTask(taskId: String!): Task!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
+  fetchBoards: [Board!]!
   fetchBoard(boardId: String!): Board!
 }
 
@@ -194,8 +195,8 @@ type Mutation {
   createProject(createProjectInput: CreateProjectInput!): Project!
   startProject(projectId: String!, userIds: [String!]!, point: Float!): Project!
   createRegion(name: String!): Region!
-  createTask(createTaskInput: CreateTaskInput!, projectId: String!, taskTypeId: String!): Task!
-  updateTask(taskId: String!, updateTaskInput: UpdateTaskInput!): Task!
+  createTask(content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!, dutyMember: [String!]!, projectId: String!): Task!
+  updateTask(taskId: String!, content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!, dutyMember: [String!]!): Task!
   deleteTask(taskId: String!): Boolean!
   createTendency(name: String!): Tendency!
   createType(name: String!): Type!
@@ -203,8 +204,8 @@ type Mutation {
   checkTokenToEmail(email: String!, token: String!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
-  createBoard(createBoardInput: CreateBoardInput!, projectId: String!): Board!
-  updateBoard(boardId: String!, updateBoardInput: UpdateBoardInput!): Board!
+  createBoard(title: String!, content: String!, projectId: String!): Board!
+  updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!
 }
 
@@ -227,6 +228,11 @@ input CreateProjectInput {
   platformIds: [String!]!
 }
 
+<<<<<<< HEAD
+input StartProjectInput {
+  projectId: String!
+  userIds: [String!]!
+=======
 input CreateTaskInput {
   content: String!
   limit: DateTime!
@@ -235,6 +241,7 @@ input CreateTaskInput {
 input UpdateTaskInput {
   content: String
   limit: DateTime
+>>>>>>> ed2c992b22518725adc0f62164f7036d5e2c309d
 }
 
 input CreateUserInput {
@@ -248,14 +255,4 @@ input UpdateUserOnboardInput {
   tendencyId: [String!]!
   positionId: String!
   typeId: [String!]!
-}
-
-input CreateBoardInput {
-  title: String!
-  content: String!
-}
-
-input UpdateBoardInput {
-  title: String
-  content: String
 }
