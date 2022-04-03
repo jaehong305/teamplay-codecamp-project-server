@@ -33,10 +33,20 @@ export class ProjectResolver {
   @Mutation(() => Project)
   async startProject(
     @CurrentUser() currentUser: ICurrentUser,
-    @Args('projectId') projectId: string,
+    @Args('chatRoomId') chatRoomId: string,
     @Args({ name: 'userIds', type: () => [String] }) userIds: string[],
     @Args('point') point: number,
   ) {
-    return await this.projectService.createProjectMember({ projectId, userIds, leaderId: currentUser.id, point });
+    return await this.projectService.createProjectMember({ chatRoomId, userIds, leaderId: currentUser.id, point });
+  }
+
+  @Mutation(() => Boolean)
+  async deleteAllProject() {
+    return await this.projectService.deleteAll();
+  }
+
+  @Mutation(() => Boolean)
+  async deleteProject(@Args('projectId') projectId: string) {
+    return await this.projectService.delete({ projectId });
   }
 }
