@@ -81,12 +81,19 @@ export class ChatRoomService {
   async createChat({ message, id, chatRoomId }) {
     const user = await this.userRepository.findOne({ id });
 
+    const previousChat = this.chatRepository.findOne({ where: { chatRoom: chatRoomId }, relations: ['user'] });
+
     const chat = await this.chatRepository.save({
       content: message,
       user,
       chatRoom: chatRoomId,
     });
-    this.eventGateWay.server.emit('message' + chatRoomId, chat);
+
+    const chatData = {
+      previousChat,
+      chat,
+    };
+    this.eventGateWay.server.emit('message' + chatRoomId, chatData);
     return '채팅저장성공';
   }
 }
