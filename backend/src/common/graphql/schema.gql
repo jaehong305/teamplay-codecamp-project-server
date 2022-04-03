@@ -228,22 +228,6 @@ input CreateProjectInput {
   platformIds: [String!]!
 }
 
-<<<<<<< HEAD
-input StartProjectInput {
-  projectId: String!
-  userIds: [String!]!
-=======
-input CreateTaskInput {
-  content: String!
-  limit: DateTime!
-}
-
-input UpdateTaskInput {
-  content: String
-  limit: DateTime
->>>>>>> ed2c992b22518725adc0f62164f7036d5e2c309d
-}
-
 input CreateUserInput {
   email: String!
   name: String!
