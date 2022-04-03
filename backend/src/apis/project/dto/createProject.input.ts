@@ -13,9 +13,11 @@ export class CreateProjectInput extends OmitType(
     'type',
     'location',
     'leader',
+    'point',
     'projectToPositions',
     'platforms',
     'users',
+    'updatedAt',
   ],
   InputType,
 ) {
