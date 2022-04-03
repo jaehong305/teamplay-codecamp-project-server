@@ -10,7 +10,7 @@ export class ProjectToPosition {
   @Field(() => String)
   id!: string;
 
-  @ManyToOne(() => Project, project => project.projectToPositions)
+  @ManyToOne(() => Project, project => project.projectToPositions, { cascade: true, onDelete: 'CASCADE' })
   @Field(() => Project)
   project!: Project;
 

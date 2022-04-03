@@ -14,7 +14,7 @@ export class ChatRoomMember {
   @Field(() => Date)
   createdAt!: Date;
 
-  @ManyToOne(() => ChatRoom, chatroom => chatroom.chatRoomMembers)
+  @ManyToOne(() => ChatRoom, chatroom => chatroom.chatRoomMembers, { cascade: true, onDelete: 'CASCADE' })
   @Field(() => ChatRoom)
   chatRoom!: ChatRoom;
 

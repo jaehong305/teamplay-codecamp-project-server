@@ -1,5 +1,6 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Board } from 'src/apis/board/entities/board.entity';
+import { ChatRoom } from 'src/apis/chatRoom/entities/chatRoom.entity';
 import { Location } from 'src/apis/location/entities/location.entity';
 import { Platform } from 'src/apis/platform/entities/platform.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
@@ -13,7 +14,9 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { ProjectToPosition } from './projectToPosition.entity';
 
@@ -73,6 +76,10 @@ export class Project {
   @Field(() => Boolean)
   isStart!: boolean;
 
+  @Column({ default: 0 })
+  @Field(() => Int)
+  point?: number;
+
   @ManyToOne(() => Type, { cascade: true, onDelete: 'CASCADE' })
   @Field(() => Type)
   type!: Type;
@@ -98,6 +105,10 @@ export class Project {
   @Field(() => Date)
   createdAt!: Date;
 
+  @UpdateDateColumn()
+  @Field(() => Date)
+  updatedAt!: Date;
+
   @DeleteDateColumn()
   @Field(() => Date)
   deletedAt!: Date;
@@ -109,4 +120,7 @@ export class Project {
   @ManyToMany(() => User)
   @Field(() => [User], { nullable: true })
   users?: User[];
+
+  @OneToOne(() => ChatRoom, chatRoom => chatRoom.project)
+  chatRoom!: ChatRoom;
 }
