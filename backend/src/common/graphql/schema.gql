@@ -33,6 +33,7 @@ type ChatRoom {
   project: Project!
   chat: [Chat!]!
   chatRoomMembers: [ChatRoomMember!]!
+  deletedAt: DateTime
 }
 
 type ChatRoomMember {
@@ -130,6 +131,8 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
+  board: Board!
+  task: Task!
   projectMembers: [ProjectMember!]
 }
 

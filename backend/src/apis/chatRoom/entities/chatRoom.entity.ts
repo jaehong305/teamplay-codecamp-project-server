@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Chat } from 'src/apis/chatRoom/entities/chat.entity';
 import { ChatRoomMember } from 'src/apis/chatRoom/entities/chatRoomMember.entity';
 import { Project } from 'src/apis/project/entities/project.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -27,4 +27,8 @@ export class ChatRoom {
   @OneToMany(() => ChatRoomMember, chatRoomMember => chatRoomMember.chatRoom)
   @Field(() => [ChatRoomMember])
   chatRoomMembers!: ChatRoomMember[];
+
+  @DeleteDateColumn()
+  @Field(() => Date, { nullable: true })
+  deletedAt?: Date;
 }

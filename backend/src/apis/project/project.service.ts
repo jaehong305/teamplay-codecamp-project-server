@@ -165,6 +165,8 @@ export class ProjectService {
       point,
     });
 
+    await this.chatRoomRepository.softDelete({ id: chatRoomId });
+
     return await this.projectRepository.findOne({ where: { id: project.id }, relations: ['projectMembers'] });
   }
 
