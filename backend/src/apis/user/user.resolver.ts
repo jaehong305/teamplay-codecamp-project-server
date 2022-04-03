@@ -73,4 +73,21 @@ export class UserResolver {
     await this.cacheManager.del(currentUser.email);
     return await this.userService.updateByOnboard({ id: currentUser.id, updateUserOnboardInput });
   }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => User)
+  async updateUser(
+    @CurrentUser() currentUser: ICurrentUser,
+    @Args('name') name: string,
+    @Args('password') password: string,
+    @Args('changePassword') changePassword: string,
+  ) {
+    await this.userService.update({ id: currentUser.id, name, password, changePassword });
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Boolean)
+  async deleteUser(@CurrentUser() currentUser: ICurrentUser) {
+    return await this.userService.delete({ id: currentUser.id });
+  }
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Position } from '../position/entities/position.entity';
@@ -6,7 +6,7 @@ import { Tendency } from '../tendency/entities/tendency.entity';
 import { Type } from '../type/entities/type.entity';
 import { User } from './entities/user.entity';
 import axios from 'axios';
-import { ProjectMember } from '../project/entities/projectMember.entity';
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -111,7 +111,26 @@ export class UserService {
       position,
       tendencys,
       types,
+      imgUrl: updateUserOnboardInput.imgUrl,
     };
     return await this.userRepository.save(newUser);
+  }
+
+  async update({ id, name, password, changePassword }) {
+    const user = await this.userRepository.findOne({ id });
+    const isAuthenticated = await bcrypt.compare(password, user.password);
+    if (!isAuthenticated) throw new UnauthorizedException('비밀번호가 틀립니다.');
+    const pwd = await bcrypt.hash(changePassword, 10);
+    const newUser = {
+      ...user,
+      name,
+      password: pwd,
+    };
+    return await this.userRepository.save(newUser);
+  }
+
+  async delete({ id }) {
+    const result = await this.userRepository.softDelete({ id });
+    return result.affected ? true : false;
   }
 }
