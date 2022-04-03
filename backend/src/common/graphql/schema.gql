@@ -225,8 +225,6 @@ input CreateProjectInput {
   imgUrl: String!
   skill: String!
   description: String!
-  point: Int!
-  updatedAt: DateTime!
   typeId: String!
   locationId: String!
   positionIds: [String!]!
