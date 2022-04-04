@@ -115,7 +115,7 @@ export class Project {
   @Field(() => Date)
   deletedAt!: Date;
 
-  @OneToMany(() => Board, board => board.user)
+  @OneToMany(() => Board, board => board.project)
   @Field(() => [Board], { nullable: true })
   board?: Board[];
 

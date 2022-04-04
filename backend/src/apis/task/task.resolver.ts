@@ -1,19 +1,23 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TaskService } from './task.service';
 import { Task, TASK_TYPE_ENUM } from './entities/task.entity';
 import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
-import { User } from '../user/entities/user.entity';
+import { ProjectMember } from '../project/entities/projectMember.entity';
+import { Connection, Repository } from 'typeorm';
+import { Project } from '../project/entities/project.entity';
 
 @Resolver()
 export class TaskResolver {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    ) {}
 
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Task])
-  async fetchTasks() {
-    return await this.taskService.findAll();
+  async fetchTasks(@Args('projectId') projectId: string) {
+    return await this.taskService.findAll({projectId});
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -25,15 +29,14 @@ export class TaskResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Task)
   async createTask(
+    @CurrentUser() currentUser: ICurrentUser,
+    @Args('projectId') projectId: string,
     @Args('content') content: string,
     @Args('limit') limit: Date,
     @Args({name:'taskType', type: () => TASK_TYPE_ENUM }) taskType: TASK_TYPE_ENUM,
-    @Args({ name: 'dutyMember', type: () => [String]}) dutyMember: User[],
-    @Args('projectId') project: string,
-    @CurrentUser() currentUser: ICurrentUser
+    @Args({name: 'userIds', type: () => [String]}) userIds: string[]
     ) {
-    const createUser = currentUser.id;
-    return await this.taskService.create({ createUser, content, limit, taskType, dutyMember, project});
+    return await this.taskService.create({projectId, writerId: currentUser.id, content, limit, taskType, userIds});
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -43,11 +46,11 @@ export class TaskResolver {
     @Args('content') content: string,
     @Args('limit') limit: Date,
     @Args({name:'taskType', type: () => TASK_TYPE_ENUM }) taskType: TASK_TYPE_ENUM,
-    @Args({ name: 'dutyMember', type: () => [String]}) dutyMember: User[],
+    @Args({ name: 'userIds', type: () => [String]}) userIds: string[],
     @CurrentUser() currentUser: ICurrentUser
   ) {
     const updateUser = currentUser.id;
-    return await this.taskService.update({taskId, updateUser, content, limit, taskType, dutyMember});
+    return await this.taskService.update({taskId, updateUser, content, limit, taskType, userIds});
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -55,4 +58,28 @@ export class TaskResolver {
   async deleteTask(
     @Args('taskId') taskId: string) {
     return await this.taskService.delete({taskId})};
+  
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Task)
+  async completeTask(
+    @Args('taskId') taskId: string
+  ) {
+    return await this.taskService.complete({taskId})
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Task)
+  async notCompleteTask(
+    @Args('taskId') taskId: string
+  ) {
+    return await this.taskService.notComplete({taskId})
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => Int)
+  async progressRatio(
+    @Args('projectId') projectId: string
+  ) {
+    return await this.taskService.progress({projectId})
+  }
 }
