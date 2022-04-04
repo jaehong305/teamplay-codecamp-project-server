@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
 import { ChatRoomMember } from '../chatRoom/entities/chatRoomMember.entity';
@@ -25,6 +26,9 @@ import { ProjectService } from './project.service';
       ChatRoom,
       ChatRoomMember,
     ]),
+    ElasticsearchModule.register({
+      node: 'http://elasticsearch:9200',
+    }),
   ],
   providers: [ProjectResolver, ProjectService],
 })

@@ -23,7 +23,10 @@ export class TaskService {
   }
 
   async findOne({taskId}) {
-    return await this.taskRepository.findOne({id:taskId})
+    return await this.taskRepository.findOne({
+      where: {id:taskId},
+      relations: ['user', 'project'],
+    })
   }
 
   // 업무 추가하기 기능

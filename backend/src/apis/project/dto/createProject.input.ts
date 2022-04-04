@@ -16,6 +16,8 @@ export class CreateProjectInput extends OmitType(
     'projectToPositions',
     'platforms',
     'users',
+    'updatedAt'
+    ,
   ],
   InputType,
 ) {

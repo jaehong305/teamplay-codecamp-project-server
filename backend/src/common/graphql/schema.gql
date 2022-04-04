@@ -170,8 +170,9 @@ type Query {
   fetchLocations: [Location!]!
   fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
-  fetchProject(projectId: String!): Project!
   fetchProjects(page: Float!): [Project!]!
+  fetchProject(projectId: String!): Project!
+  searchProjects(search: String!): [Project!]!
   fetchRegions: [Region!]!
   fetchTasks: [Task!]!
   fetchTask(taskId: String!): Task!
@@ -226,7 +227,6 @@ input CreateProjectInput {
   skill: String!
   description: String!
   point: Int!
-  updatedAt: DateTime!
   typeId: String!
   locationId: String!
   positionIds: [String!]!
