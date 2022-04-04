@@ -209,6 +209,7 @@ type Mutation {
   createPosition(name: String!): Position!
   createProject(createProjectInput: CreateProjectInput!): Project!
   startProject(chatRoomId: String!, userIds: [String!]!, point: Float!): Project!
+  endProject(projectId: String!): Boolean!
   deleteAllProject: Boolean!
   deleteProject(projectId: String!): Boolean!
   createRegion(name: String!): Region!
