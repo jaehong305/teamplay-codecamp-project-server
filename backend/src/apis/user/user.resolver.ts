@@ -55,10 +55,6 @@ export class UserResolver {
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     const checkEmail = await this.cacheManager.get(createUserInput.email);
-<<<<<<< HEAD
-=======
-    console.log(checkEmail);
->>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
     if (checkEmail !== true) throw new UnauthorizedException('이메일을 인증해주세요.');
     await this.userService.checkUser(createUserInput.email);
 

@@ -35,11 +35,12 @@ export class Board {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => User)
-  @Field(() => User)
-  user: User;
+//   @ManyToOne(() => User)
+//   @Field(() => User)
+//   user: User;
 
   @ManyToOne(() => Project, { cascade: true, onDelete: 'CASCADE' })
+  @Column()
   @Field(() => Project)
   project: Project;
 }

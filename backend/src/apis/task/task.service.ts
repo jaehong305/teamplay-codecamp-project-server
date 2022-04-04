@@ -25,16 +25,14 @@ export class TaskService {
   async findOne({taskId}) {
     return await this.taskRepository.findOne({
       where: {id:taskId},
-      relations: ['user', 'project'],
+      relations: ['projectMember', 'project'],
     })
   }
 
   // 업무 추가하기 기능
-  async create({ createUser, content, limit, taskType, dutyMember, project }) {
-    const writer = await this.userRepository.findOne({id:createUser})
-    const dutymember= await this.userRepository.find({id: dutyMember})
-    const projectId = await this.projectRepository.findOne({id: project})
-    return await this.taskRepository.save({user:writer, content, limit, taskType, dutyMember: dutymember, project: projectId})
+  async create({project, writerId, content, limit, taskType }) {
+    // const project = await this.projectRepository.findOne({id:projectId}, {relations: ['project']})
+    return await this.taskRepository.save({ project, writerId, content, limit, taskType})
   }
 
   async update( {taskId, updateUser, content, limit, taskType, dutyMember}) {
@@ -47,7 +45,6 @@ export class TaskService {
       taskType,
       dutyMember
     }
-    console.log
     return await this.taskRepository.save(newTask)
   }
 

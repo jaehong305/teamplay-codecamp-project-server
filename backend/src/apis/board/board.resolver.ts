@@ -26,11 +26,10 @@ export class BoardResolver {
   async createBoard(
     @Args('title') title: string,
     @Args('content') content: string,
-    @Args('projectId') project: string,
     @CurrentUser() currentUser: ICurrentUser
   ) {
-    const createUser = currentUser.id;
-    return await this.boardService.create({createUser, title, content, project});
+    const writerId = currentUser.id;
+    return await this.boardService.create({writerId, title, content});
   }
 
   @UseGuards(GqlAuthAccessGuard)
