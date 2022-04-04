@@ -33,6 +33,7 @@ type ChatRoom {
   project: Project!
   chat: [Chat!]!
   chatRoomMembers: [ChatRoomMember!]!
+  deletedAt: DateTime
 }
 
 type ChatRoomMember {
@@ -56,6 +57,12 @@ enum TASK_TYPE_ENUM {
   PLANNING
 }
 
+type ProjectMember {
+  id: String!
+  user: User!
+  project: User!
+}
+
 type User {
   id: String!
   email: String!
@@ -64,12 +71,13 @@ type User {
   deletedAt: DateTime
   career: CAREER_ENUM
   point: Int!
+  imgUrl: String
   tendencys: [Tendency!]
   position: Position
   types: [Type!]
   task: [Task!]
   chatRoomMembers: [ChatRoomMember!]!
-  projects: [Project!]!
+  projectMembers: [ProjectMember!]
 }
 
 enum CAREER_ENUM {
@@ -124,7 +132,9 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  users: [User!]
+  board: Board
+  task: Task
+  projectMembers: [ProjectMember!]
 }
 
 enum METHOD_ENUM {
@@ -171,14 +181,20 @@ type Query {
   fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
   fetchProjects(page: Float!): [Project!]!
+<<<<<<< HEAD
   fetchProject(projectId: String!): Project!
   searchProjects(search: String!): [Project!]!
+=======
+  fetchProjectCounts: Float!
+  fetchMyProjects: [Project!]!
+>>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
   fetchRegions: [Region!]!
   fetchTasks: [Task!]!
   fetchTask(taskId: String!): Task!
   fetchTendencys: [Tendency!]!
   fetchTypes: [Type!]!
   fetchUser: User!
+  fetchUsers(page: Float!): [User!]!
   fetchBoards: [Board!]!
   fetchBoard(boardId: String!): Board!
 }
@@ -209,6 +225,8 @@ type Mutation {
   checkTokenToEmail(email: String!, token: String!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
+  updateUser(name: String!, password: String!, changePassword: String!): User!
+  deleteUser: Boolean!
   createBoard(title: String!, content: String!, projectId: String!): Board!
   updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!
@@ -226,7 +244,10 @@ input CreateProjectInput {
   imgUrl: String!
   skill: String!
   description: String!
+<<<<<<< HEAD
   point: Int!
+=======
+>>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
   typeId: String!
   locationId: String!
   positionIds: [String!]!
@@ -242,6 +263,7 @@ input CreateUserInput {
 
 input UpdateUserOnboardInput {
   career: CAREER_ENUM
+  imgUrl: String
   tendencyId: [String!]!
   positionId: String!
   typeId: [String!]!

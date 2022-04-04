@@ -10,14 +10,23 @@ export class CreateProjectInput extends OmitType(
     'isStart',
     'createdAt',
     'deletedAt',
+    'updatedAt',
     'type',
     'location',
     'leader',
+    'point',
     'projectToPositions',
     'platforms',
+<<<<<<< HEAD
     'users',
     'updatedAt'
     ,
+=======
+    'board',
+    'task',
+    'projectMembers',
+    'chatRoom',
+>>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
   ],
   InputType,
 ) {
