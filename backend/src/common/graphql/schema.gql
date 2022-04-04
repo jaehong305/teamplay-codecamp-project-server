@@ -109,6 +109,11 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
+<<<<<<< HEAD
+=======
+  board: [Board!]
+  task: [Task!]
+>>>>>>> be3baabbdd4355e04a65b32988ce132e957baffa
   projectMembers: [ProjectMember!]
 }
 
@@ -205,6 +210,7 @@ type Mutation {
   createPosition(name: String!): Position!
   createProject(createProjectInput: CreateProjectInput!): Project!
   startProject(chatRoomId: String!, userIds: [String!]!, point: Float!): Project!
+  endProject(projectId: String!): Boolean!
   deleteAllProject: Boolean!
   deleteProject(projectId: String!): Boolean!
   createRegion(name: String!): Region!

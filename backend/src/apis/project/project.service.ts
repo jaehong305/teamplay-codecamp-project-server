@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChatRoom } from '../chatRoom/entities/chatRoom.entity';
@@ -168,6 +168,25 @@ export class ProjectService {
     await this.chatRoomRepository.softDelete({ id: chatRoomId });
 
     return await this.projectRepository.findOne({ where: { id: project.id }, relations: ['projectMembers'] });
+  }
+
+  async endProject({ leaderId, projectId }) {
+    const user = await this.userRepository.findOne({ id: leaderId });
+    const project = await this.projectRepository.findOne({ where: { id: projectId }, relations: ['leader'] });
+    if (!project) throw new BadRequestException('존재하지않는 프로젝트입니다.');
+    if (project.isComplete) throw new BadRequestException('이미 완료된 프로젝트입니다.');
+    if (!project.isStart) throw new BadRequestException('시작된 프로젝트가 아닙니다.');
+    if (user.id !== project.leader.id) throw new UnauthorizedException('프로젝트 리더만 프로젝트 완료가 가능합니다.');
+
+    const projectMembers = await this.projectMemberRepository.find({ where: { project }, relations: ['user'] });
+    await Promise.all(
+      projectMembers.map(member => {
+        this.userRepository.update({ id: member.user.id }, { point: member.user.point + project.point });
+      }),
+    );
+    await this.projectRepository.update({ id: projectId }, { isComplete: true });
+
+    return true;
   }
 
   async deleteAll() {

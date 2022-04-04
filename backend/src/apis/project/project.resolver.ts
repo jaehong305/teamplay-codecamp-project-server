@@ -80,6 +80,12 @@ export class ProjectResolver {
     return await this.projectService.createProjectMember({ chatRoomId, userIds, leaderId: currentUser.id, point });
   }
 
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Boolean)
+  async endProject(@CurrentUser() currentUser: ICurrentUser, @Args('projectId') projectId: string) {
+    return await this.projectService.endProject({ leaderId: currentUser.id, projectId });
+  }
+
   @Mutation(() => Boolean)
   async deleteAllProject() {
     return await this.projectService.deleteAll();
