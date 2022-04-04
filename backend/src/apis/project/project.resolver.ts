@@ -10,7 +10,6 @@ import { Cache } from 'cache-manager';
 
 @Resolver()
 export class ProjectResolver {
-<<<<<<< HEAD
   constructor(
     private readonly projectService: ProjectService,
     private readonly elasticsearchService: ElasticsearchService,
@@ -30,34 +29,6 @@ export class ProjectResolver {
     @UseGuards(GqlAuthAccessGuard)
     @Mutation(() => Project)
    async createProject(
-=======
-  constructor(private readonly projectService: ProjectService) {}
-
-  @Query(() => Project)
-  async fetchProject(@Args('projectId') projectId: string) {
-    return await this.projectService.findOne({ projectId });
-  }
-
-  @Query(() => [Project])
-  async fetchProjects(@Args('page') page: number) {
-    return this.projectService.find({ page });
-  }
-
-  @Query(() => Number)
-  async fetchProjectCounts() {
-    return this.projectService.findCount();
-  }
-
-  @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [Project])
-  async fetchMyProjects(@CurrentUser() currentUser: ICurrentUser) {
-    return await this.projectService.findMyProjects({ currentUser });
-  }
-
-  @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => Project)
-  async createProject(
->>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
     @CurrentUser() currentUser: ICurrentUser,
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
   ) {

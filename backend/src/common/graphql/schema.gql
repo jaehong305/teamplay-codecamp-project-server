@@ -14,9 +14,8 @@ type Type {
   users: [User!]!
 }
 
-type Chat {
+type ChatRoomMember {
   id: String!
-  content: String!
   createdAt: DateTime!
   chatRoom: ChatRoom!
   user: User!
@@ -26,36 +25,6 @@ type Chat {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-type ChatRoom {
-  id: String!
-  name: String!
-  project: Project!
-  chat: [Chat!]!
-  chatRoomMembers: [ChatRoomMember!]!
-  deletedAt: DateTime
-}
-
-type ChatRoomMember {
-  id: String!
-  createdAt: DateTime!
-  chatRoom: ChatRoom!
-  user: User!
-}
-
-type Task {
-  id: String!
-  content: String!
-  limit: DateTime!
-  taskType: TASK_TYPE_ENUM!
-  is_complete: Boolean!
-}
-
-enum TASK_TYPE_ENUM {
-  DESIGN
-  DEVELOPMENT
-  PLANNING
-}
 
 type ProjectMember {
   id: String!
@@ -75,7 +44,6 @@ type User {
   tendencys: [Tendency!]
   position: Position
   types: [Type!]
-  task: [Task!]
   chatRoomMembers: [ChatRoomMember!]!
   projectMembers: [ProjectMember!]
 }
@@ -86,12 +54,21 @@ enum CAREER_ENUM {
   NEWCOMER
 }
 
-type Board {
+type Chat {
   id: String!
-  title: String!
   content: String!
+  createdAt: DateTime!
+  chatRoom: ChatRoom!
   user: User!
+}
+
+type ChatRoom {
+  id: String!
+  name: String!
   project: Project!
+  chat: [Chat!]!
+  chatRoomMembers: [ChatRoomMember!]!
+  deletedAt: DateTime
 }
 
 type Region {
@@ -132,8 +109,6 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  board: Board
-  task: Task
   projectMembers: [ProjectMember!]
 }
 
@@ -173,6 +148,28 @@ enum POINT_PAYMENT_STATUS_ENUM {
   CANCEL
 }
 
+type Board {
+  id: String!
+  title: String!
+  content: String!
+  project: Project!
+}
+
+type Task {
+  id: String!
+  writerId: String!
+  content: String!
+  limit: DateTime!
+  taskType: TASK_TYPE_ENUM!
+  is_complete: Boolean!
+}
+
+enum TASK_TYPE_ENUM {
+  DESIGN
+  DEVELOPMENT
+  PLANNING
+}
+
 type Query {
   fetchChatRooms: [ChatRoom!]!
   fetchChats(chatRoomId: String!, page: Float!): [Chat!]!
@@ -181,13 +178,8 @@ type Query {
   fetchPlatforms: [Platform!]!
   fetchPositions: [Position!]!
   fetchProjects(page: Float!): [Project!]!
-<<<<<<< HEAD
   fetchProject(projectId: String!): Project!
   searchProjects(search: String!): [Project!]!
-=======
-  fetchProjectCounts: Float!
-  fetchMyProjects: [Project!]!
->>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
   fetchRegions: [Region!]!
   fetchTasks: [Task!]!
   fetchTask(taskId: String!): Task!
@@ -216,7 +208,7 @@ type Mutation {
   deleteAllProject: Boolean!
   deleteProject(projectId: String!): Boolean!
   createRegion(name: String!): Region!
-  createTask(content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!, dutyMember: [String!]!, projectId: String!): Task!
+  createTask(content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!): Task!
   updateTask(taskId: String!, content: String!, limit: DateTime!, taskType: TASK_TYPE_ENUM!, dutyMember: [String!]!): Task!
   deleteTask(taskId: String!): Boolean!
   createTendency(name: String!): Tendency!
@@ -227,7 +219,7 @@ type Mutation {
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
   updateUser(name: String!, password: String!, changePassword: String!): User!
   deleteUser: Boolean!
-  createBoard(title: String!, content: String!, projectId: String!): Board!
+  createBoard(title: String!, content: String!): Board!
   updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!
 }
@@ -244,10 +236,6 @@ input CreateProjectInput {
   imgUrl: String!
   skill: String!
   description: String!
-<<<<<<< HEAD
-  point: Int!
-=======
->>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
   typeId: String!
   locationId: String!
   positionIds: [String!]!
