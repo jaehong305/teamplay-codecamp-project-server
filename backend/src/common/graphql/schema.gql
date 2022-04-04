@@ -132,8 +132,8 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  board: Board
-  task: Task
+  board: [Board!]
+  task: [Task!]
   projectMembers: [ProjectMember!]
 }
 

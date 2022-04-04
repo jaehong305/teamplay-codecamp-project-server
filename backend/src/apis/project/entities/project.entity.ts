@@ -116,12 +116,12 @@ export class Project {
   deletedAt!: Date;
 
   @OneToMany(() => Board, board => board.user)
-  @Field(() => Board, { nullable: true })
-  board?: Board;
+  @Field(() => [Board], { nullable: true })
+  board?: Board[];
 
   @OneToMany(() => Task, task => task.project)
-  @Field(() => Task, { nullable: true })
-  task?: Task;
+  @Field(() => [Task], { nullable: true })
+  task?: Task[];
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.project)
   @Field(() => [ProjectMember], { nullable: true })
