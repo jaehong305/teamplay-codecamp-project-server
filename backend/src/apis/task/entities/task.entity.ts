@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { Project } from 'src/apis/project/entities/project.entity';
+import { User } from 'src/apis/user/entities/user.entity';
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Repository, UpdateDateColumn } from 'typeorm';
 
 export enum TASK_TYPE_ENUM {
@@ -18,10 +19,6 @@ export class Task {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => String)
   id: string;
-
-  @Column()
-  @Field(() => String)
-  writerId: string;
 
   @Column()
   @Field(() => String)
@@ -54,4 +51,13 @@ export class Task {
   @ManyToOne(() => Project, (project) => project.id)
   @Field(() => Project)
   project: Project;
+  
+  @JoinTable()
+  @ManyToMany(() => User)
+  @Field(() => [User])
+  users?: User[]
+
+  @ManyToOne(() => User)
+  @Field(() => User)
+  user: User
 }

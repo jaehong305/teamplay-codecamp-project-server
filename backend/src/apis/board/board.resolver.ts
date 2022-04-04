@@ -11,8 +11,8 @@ export class BoardResolver {
 
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Board])
-  async fetchBoards() {
-    return await this.boardService.findAll();
+  async fetchBoards(@Args('projectId') projectId: string) {
+    return await this.boardService.findAll({projectId});
   }
 
   @UseGuards(GqlAuthAccessGuard)
