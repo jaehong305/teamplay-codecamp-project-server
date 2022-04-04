@@ -1,5 +1,5 @@
 import { CACHE_MANAGER, Inject, UnprocessableEntityException, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
 import { CreateProjectInput } from './dto/createProject.input';
@@ -14,21 +14,27 @@ export class ProjectResolver {
     private readonly projectService: ProjectService,
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache) {}
-    
-    @Query(() => [Project])
-    async fetchProjects(@Args('page') page: number) {
-      return this.projectService.find({ page });
-    }
- 
-    @Query(() => Project)
-    async fetchProject(@Args('projectId') projectId: string) {
-      return await this.projectService.findOne({ projectId });
-    }
-    
-    @UseGuards(GqlAuthAccessGuard)
-    @Mutation(() => Project)
-   async createProject(
+    private readonly cacheManager: Cache,
+  ) {}
+
+  @Query(() => [Project])
+  async fetchProjects(@Args('page') page: number) {
+    return this.projectService.find({ page });
+  }
+
+  @Query(() => Project)
+  async fetchProject(@Args('projectId') projectId: string) {
+    return await this.projectService.findOne({ projectId });
+  }
+
+  @Query(() => Int)
+  async fetchProjectCounts() {
+    return await this.projectService.findCount();
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Project)
+  async createProject(
     @CurrentUser() currentUser: ICurrentUser,
     @Args('createProjectInput') createProjectInput: CreateProjectInput,
   ) {
@@ -36,38 +42,32 @@ export class ProjectResolver {
   }
 
   @Query(() => [Project])
-  async searchProjects(
-    @Args('search') search: string
-    ) {
+  async searchProjects(@Args('search') search: string) {
     const list = await this.cacheManager.get(`${search}`);
     if (list) {
       return list;
-    }
-    else {
+    } else {
       const searchResult = await this.elasticsearchService.search({
         index: 'project',
         from: 0,
         size: 100,
         query: {
           bool: {
-            should: [
-              {prefix: {name: search}}
-            ],
+            should: [{ prefix: { name: search } }],
           },
         },
-    });
-      const searchResultmap = searchResult.hits.hits.map((el:any) => ({
-        id:el._source.id,
-        name:el._source.name,
+      });
+      const searchResultmap = searchResult.hits.hits.map((el: any) => ({
+        id: el._source.id,
+        name: el._source.name,
       }));
-      if(searchResultmap.length === 0){
-        throw new UnprocessableEntityException('검색 결과가 존재하지 않습니다.')
+      if (searchResultmap.length === 0) {
+        throw new UnprocessableEntityException('검색 결과가 존재하지 않습니다.');
       }
       await this.cacheManager.set(`${search}`, searchResultmap, { ttl: 0 });
       return searchResultmap;
     }
   }
-
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Project)
