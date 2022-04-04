@@ -10,7 +10,7 @@ export class ProjectMember {
   @Field(() => String)
   id!: string;
 
-  @ManyToOne(() => User, user => user.projectMembers)
+  @ManyToOne(() => User, user => user.projectMembers, { eager: true })
   @Field(() => User)
   user!: User;
 

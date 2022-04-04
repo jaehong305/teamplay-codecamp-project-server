@@ -47,10 +47,16 @@ export class ProjectService {
   ) {}
 
   async findOne({ projectId }) {
-    return await this.projectRepository.findOne({
+    console.log(111111111111111111);
+    const a = await this.projectRepository.findOne({
       where: { id: projectId },
       relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms', 'projectMembers', 'board', 'task'],
     });
+
+    console.log(222222222222);
+
+    console.log(a.projectMembers);
+    return a;
   }
 
   async find({ page }) {

@@ -12,24 +12,25 @@ export class BoardResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Board])
   async fetchBoards(@Args('projectId') projectId: string) {
-    return await this.boardService.findAll({projectId});
+    return await this.boardService.findAll({ projectId });
   }
 
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => Board)
   async fetchBoard(@Args('boardId') boardId: string) {
-    return await this.boardService.findOne({boardId});
+    return await this.boardService.findOne({ boardId });
   }
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Board)
   async createBoard(
+    @Args('projectId') projectId: string,
     @Args('title') title: string,
     @Args('content') content: string,
-    @CurrentUser() currentUser: ICurrentUser
+    @CurrentUser() currentUser: ICurrentUser,
   ) {
     const writerId = currentUser.id;
-    return await this.boardService.create({writerId, title, content});
+    return await this.boardService.create({ projectId, writerId, title, content });
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -38,15 +39,15 @@ export class BoardResolver {
     @Args('boardId') boardId: string,
     @Args('title') title: string,
     @Args('content') content: string,
-    @CurrentUser() currentUser: ICurrentUser
-    ) {
-      const updateUser = currentUser.id;
-    return await this.boardService.update({boardId, title, content, updateUser});
+    @CurrentUser() currentUser: ICurrentUser,
+  ) {
+    const updateUser = currentUser.id;
+    return await this.boardService.update({ boardId, title, content, updateUser });
   }
 
   @UseGuards(GqlAuthAccessGuard)
-  @Mutation(() => Boolean )
-  async deleteBoard( 
-    @Args('boardId') boardId: string) {
-    return await this.boardService.delete({boardId})};
+  @Mutation(() => Boolean)
+  async deleteBoard(@Args('boardId') boardId: string) {
+    return await this.boardService.delete({ boardId });
+  }
 }
