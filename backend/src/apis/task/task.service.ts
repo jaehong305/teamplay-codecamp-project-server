@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from '../project/entities/project.entity';
+import { ProjectMember } from '../project/entities/projectMember.entity';
 import { User } from '../user/entities/user.entity';
 import { Task, TASK_TYPE_ENUM } from './entities/task.entity';
 
@@ -15,35 +16,54 @@ export class TaskService {
     private readonly userRepository:Repository<User>,
   
     @InjectRepository(Project)
-    private readonly projectRepository:Repository<Project>
+    private readonly projectRepository:Repository<Project>,
+
+    @InjectRepository(ProjectMember)
+    private readonly projectMemberRepository: Repository<ProjectMember>
   ){}
 
-  async findAll() {
-    return await this.taskRepository.find();
+  async findAll({projectId}) {
+    return await this.taskRepository.find({project: projectId});
   }
 
   async findOne({taskId}) {
     return await this.taskRepository.findOne({
       where: {id:taskId},
-      relations: ['projectMember', 'project'],
+      relations: ['users'],
     })
   }
 
   // 업무 추가하기 기능
-  async create({project, writerId, content, limit, taskType }) {
-    // const project = await this.projectRepository.findOne({id:projectId}, {relations: ['project']})
-    return await this.taskRepository.save({ project, writerId, content, limit, taskType})
+  async create({projectId, writerId, content, limit, taskType, userIds }) {
+    const projectMember = await this.projectMemberRepository.findOne({user: writerId, project: projectId})
+    if (!projectMember) throw new UnauthorizedException('프로젝트 참여 회원만 업무 추가가 가능합니다.')
+
+    const users = await Promise.all(userIds.map(id => {
+      return this.userRepository.findOne({id})
+    }))
+
+    const user = await this.userRepository.findOne({id: writerId})
+
+    const project = await this.projectRepository.findOne({id:projectId})
+    return await this.taskRepository.save({ project, content, limit, taskType, users, user})
   }
 
-  async update( {taskId, updateUser, content, limit, taskType, dutyMember}) {
-    const task = await this.taskRepository.findOne({id: taskId})
+  async update( {taskId, updateUser, content, limit, taskType, userIds}) {
+
+    const task = await this.taskRepository.findOne({where: {id: taskId}, relations: ['user']})
+
+    if (task.user.id !== updateUser) throw new UnauthorizedException('작성자만 수정이 가능합니다.')
+
+    const users = await Promise.all(userIds.map(id => {
+      return this.userRepository.findOne({id})
+    }))
+
     const newTask = {
-      ...task,
-      updateUser,
+      task,
       content,
       limit,
       taskType,
-      dutyMember
+      users,
     }
     return await this.taskRepository.save(newTask)
   }
@@ -51,5 +71,20 @@ export class TaskService {
   async delete({taskId}) {
     const result = await this.taskRepository.softDelete({id:taskId}); // 다양한 조건으로 삭제 가능
     return result.affected ? true : false;
+  }
+
+  async complete({taskId}) {
+    return await this.taskRepository.update({id: taskId}, {is_complete: true})
+  }
+
+  async notComplete({taskId}) {
+    return await this.taskRepository.update({id: taskId}, {is_complete: false})
+  }
+
+  async progress({projectId}) {
+    const totalTaskCount = await this.taskRepository.count({project: projectId})
+    const completeTaskCount = await this.taskRepository.count({is_complete: true, project: projectId})
+    return Math.floor(completeTaskCount / totalTaskCount)
+    
   }
 }

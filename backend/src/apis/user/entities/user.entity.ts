@@ -81,17 +81,17 @@ export class User {
   @Field(() => [Type], { nullable: true })
   types?: Type[];
   
-  // @ManyToMany(() => Task)
-  // @Field(() => [Task], { nullable: true })
-  // task?: Task[];
+  @ManyToMany(() => Task)
+  @Field(() => [Task], { nullable: true })
+  tasks?: Task[];
 
   @OneToMany(() => ChatRoomMember, chatRoomMember => chatRoomMember.user)
   @Field(() => [ChatRoomMember])
   chatRoomMembers!: ChatRoomMember[];
 
-  // @OneToMany(() => Board, board => board.user)
-  // @Field(() => Board, {nullable:true})
-  // board?: Board;
+  @OneToMany(() => Board, board => board.user)
+  @Field(() => [Board], {nullable:true})
+  board?: Board[];
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.user)
   @Field(() => [ProjectMember], { nullable: true })

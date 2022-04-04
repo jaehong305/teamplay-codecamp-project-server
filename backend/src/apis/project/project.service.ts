@@ -63,7 +63,7 @@ export class ProjectService {
   }
 
   async findCount() {
-    return await this.projectRepository.count();
+    return await this.projectRepository.count({ isStart: false });
   }
 
   async findMyProjects({ currentUser }) {
