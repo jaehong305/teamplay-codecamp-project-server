@@ -20,11 +20,16 @@ export class BoardService {
   ){}
 
   async findAll() {
-    return await this.boardRepository.find();
+    return await this.boardRepository.find({
+      relations: ['user', 'project'],
+    });
   }
 
-    async findOne({boardId}) {
-    return await this.boardRepository.findOne({id: boardId});
+  async findOne({boardId}) {
+  return await this.boardRepository.findOne({
+      where: {id:boardId},
+      relations: ['user', 'project'],
+    })
   }
 
   async create({createUser, title, content, project}) {

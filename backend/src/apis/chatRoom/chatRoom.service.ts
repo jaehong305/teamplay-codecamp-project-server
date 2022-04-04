@@ -28,18 +28,26 @@ export class ChatRoomService {
     //   .subQuery()
     //   .select('chat.chatRoom as chatRoomId')
     //   .from(Chat, 'chat')
-    //   .limit(1)
+    //   .orderBy('chat.id', 'DESC')
     //   .getQuery();
+
+    // console.log(aaa);
 
     const chatRoom = await this.chatRoomRepository
       .createQueryBuilder('chatRoom')
       .innerJoin('chatRoom.chatRoomMembers', 'chatRoomMembers', 'chatRoomMembers.user = :user', { user: id })
-      // .leftJoinAndSelect(aaa, 'chat', 'chat.chatRoomId = chatRoom.id')
+      .innerJoinAndSelect('chatRoom.project', 'project')
+      .innerJoinAndSelect('project.leader', 'leader')
+      .leftJoinAndSelect('chatRoom.chat', 'chat')
+      .orderBy('chat.createdAt', 'DESC')
+      //.leftJoinAndSelect(aaa, 'chat', 'chat.chatRoomId = chatRoom.id')
       // .where(qb => {
       //   const aaa = qb.subQuery().select('chatRoomId').from(Chat, 'chat').limit(1).getQuery();
       //   return 'chatRoom.id = ' + aaa;
       // })
       .getMany();
+
+    // console.log(chatRoom);
 
     return chatRoom;
   }
@@ -57,10 +65,13 @@ export class ChatRoomService {
   }
 
   async findChatRoomMembers({ chatRoomId }) {
-    return await this.chatRoomMemberRepository.find({
-      where: { chatRoom: chatRoomId },
-      relations: ['user'],
-    });
+    return await this.chatRoomMemberRepository
+      .createQueryBuilder('chatRoomMember')
+      .where('chatRoomMember.chatRoom = :chatRoomId', { chatRoomId })
+      .innerJoinAndSelect('chatRoomMember.user', 'user')
+      .leftJoinAndSelect('user.tendencys', 'tendencys')
+      .leftJoinAndSelect('user.position', 'position')
+      .getMany();
   }
 
   async createChatRoomMembers({ userId, projectId }) {
@@ -81,12 +92,25 @@ export class ChatRoomService {
   async createChat({ message, id, chatRoomId }) {
     const user = await this.userRepository.findOne({ id });
 
+    const previousChat = await this.chatRepository
+      .createQueryBuilder('chat')
+      .innerJoinAndSelect('chat.user', 'user')
+      .where({ chatRoom: chatRoomId })
+      .orderBy('chat.id', 'DESC')
+      .getOne();
+
     const chat = await this.chatRepository.save({
       content: message,
       user,
       chatRoom: chatRoomId,
     });
-    this.eventGateWay.server.emit('message' + chatRoomId, chat);
+
+    const chatData = {
+      previousChat,
+      chat,
+    };
+
+    this.eventGateWay.server.emit('message' + chatRoomId, chatData);
     return '채팅저장성공';
   }
 }

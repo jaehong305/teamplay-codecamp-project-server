@@ -24,6 +24,11 @@ export class UserResolver {
     return await this.userService.findOne({ email: currentUser.email });
   }
 
+  @Query(() => [User])
+  async fetchUsers(@Args('page') page: number) {
+    return await this.userService.findAll({ page });
+  }
+
   @Mutation(() => String)
   async sendTokenToEmail(@Args('email') email: string) {
     await this.userService.checkUser(email);
@@ -50,9 +55,13 @@ export class UserResolver {
   @Mutation(() => User)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
     const checkEmail = await this.cacheManager.get(createUserInput.email);
+<<<<<<< HEAD
+=======
+    console.log(checkEmail);
+>>>>>>> 4c0cdb0f83c3686a25bd06de2d60caa01a859831
     if (checkEmail !== true) throw new UnauthorizedException('이메일을 인증해주세요.');
     await this.userService.checkUser(createUserInput.email);
-    
+
     createUserInput.password = await bcrypt.hash(createUserInput.password, 10);
     await this.cacheManager.set(createUserInput.email, false, { ttl: 0 });
     return await this.userService.create({ createUserInput });
@@ -66,5 +75,22 @@ export class UserResolver {
   ) {
     await this.cacheManager.del(currentUser.email);
     return await this.userService.updateByOnboard({ id: currentUser.id, updateUserOnboardInput });
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => User)
+  async updateUser(
+    @CurrentUser() currentUser: ICurrentUser,
+    @Args('name') name: string,
+    @Args('password') password: string,
+    @Args('changePassword') changePassword: string,
+  ) {
+    await this.userService.update({ id: currentUser.id, name, password, changePassword });
+  }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Mutation(() => Boolean)
+  async deleteUser(@CurrentUser() currentUser: ICurrentUser) {
+    return await this.userService.delete({ id: currentUser.id });
   }
 }
