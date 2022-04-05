@@ -45,7 +45,7 @@ export class AuthService {
 
     const isOnboarding = await this.cacheManager.get(user.email);
     isOnboarding === false
-      ? res.redirect('https://codecamptest.shop/onboarding')
-      : res.redirect('https://codecamptest.shop');
+      ? res.redirect('http://localhost:3000/onboarding')
+      : res.redirect('http://localhost:3000/main');
   }
 }
