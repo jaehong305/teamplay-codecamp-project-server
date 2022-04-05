@@ -192,6 +192,7 @@ type Query {
   fetchPositions: [Position!]!
   fetchProjects(page: Float!): [Project!]!
   fetchProject(projectId: String!): Project!
+  fetchProjectCounts: Int!
   searchProjects(search: String!): [Project!]!
   fetchRegions: [Region!]!
   fetchTasks(projectId: String!): [Task!]!
@@ -236,7 +237,7 @@ type Mutation {
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
   updateUser(name: String!, password: String!, changePassword: String!): User!
   deleteUser: Boolean!
-  createBoard(title: String!, content: String!): Board!
+  createBoard(projectId: String!, title: String!, content: String!): Board!
   updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!
 }

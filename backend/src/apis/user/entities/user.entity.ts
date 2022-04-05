@@ -72,7 +72,7 @@ export class User {
   @Field(() => [Tendency], { nullable: true })
   tendencys?: Tendency[];
 
-  @ManyToOne(() => Position, { cascade: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Position, { cascade: true, onDelete: 'CASCADE', eager: true })
   @Field(() => Position, { nullable: true })
   position?: Position;
 
@@ -80,7 +80,7 @@ export class User {
   @ManyToMany(() => Type, type => type.users)
   @Field(() => [Type], { nullable: true })
   types?: Type[];
-  
+
   @ManyToMany(() => Task)
   @Field(() => [Task], { nullable: true })
   tasks?: Task[];
@@ -90,7 +90,7 @@ export class User {
   chatRoomMembers!: ChatRoomMember[];
 
   @OneToMany(() => Board, board => board.user)
-  @Field(() => [Board], {nullable:true})
+  @Field(() => [Board], { nullable: true })
   board?: Board[];
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.user)
