@@ -89,4 +89,9 @@ export class UserResolver {
   async deleteUser(@CurrentUser() currentUser: ICurrentUser) {
     return await this.userService.delete({ id: currentUser.id });
   }
+
+  @Mutation(() => Boolean)
+  async deleteUserHard(@Args('email') email: string) {
+    return await this.userService.deleteHard({ email });
+  }
 }
