@@ -194,6 +194,7 @@ type Query {
   fetchProject(projectId: String!): Project!
   fetchProjectCounts: Int!
   searchProjects(search: String!): [Project!]!
+  searchTags(search: String!): [Project!]!
   fetchRegions: [Region!]!
   fetchTasks(projectId: String!): [Task!]!
   fetchTask(taskId: String!): Task!

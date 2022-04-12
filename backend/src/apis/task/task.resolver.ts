@@ -64,6 +64,7 @@ export class TaskResolver {
   async completeTask(
     @Args('taskId') taskId: string
   ) {
+    console.log(taskId)
     return await this.taskService.complete({taskId})
   }
 

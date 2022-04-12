@@ -70,7 +70,6 @@ export class ProjectResolver {
     }
   }
 
-<<<<<<< HEAD
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Project])
   async searchTags(
@@ -106,8 +105,6 @@ export class ProjectResolver {
   }
 
 
-=======
->>>>>>> be624b4566284bf129feddaba32a6d658d2d3367
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Project)
   async startProject(
