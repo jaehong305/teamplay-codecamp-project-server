@@ -52,14 +52,12 @@ export class ChatRoomService {
     return chatRoom;
   }
 
-  async findChats({ chatRoomId, page }) {
+  async findChats({ chatRoomId }) {
     const chat = await this.chatRepository
       .createQueryBuilder('chat')
       .where('chat.chatRoom = :chatRoomId', { chatRoomId })
       .innerJoinAndSelect('chat.user', 'user')
       .orderBy('chat.id', 'DESC')
-      .take(20)
-      .skip(20 * (page - 1))
       .getMany();
     return chat;
   }

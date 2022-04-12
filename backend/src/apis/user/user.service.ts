@@ -133,4 +133,9 @@ export class UserService {
     const result = await this.userRepository.softDelete({ id });
     return result.affected ? true : false;
   }
+
+  async deleteHard({ email }) {
+    const result = await this.userRepository.delete({ email });
+    return result.affected ? true : false;
+  }
 }

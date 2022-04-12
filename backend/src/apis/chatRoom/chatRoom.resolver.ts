@@ -20,12 +20,8 @@ export class ChatRoomResolver {
 
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Chat])
-  async fetchChats(
-    @CurrentUser() currentUser: ICurrentUser,
-    @Args('chatRoomId') chatRoomId: string,
-    @Args('page') page: number,
-  ) {
-    return await this.chatRoomService.findChats({ chatRoomId, page });
+  async fetchChats(@CurrentUser() currentUser: ICurrentUser, @Args('chatRoomId') chatRoomId: string) {
+    return await this.chatRoomService.findChats({ chatRoomId });
   }
 
   @UseGuards(GqlAuthAccessGuard)
