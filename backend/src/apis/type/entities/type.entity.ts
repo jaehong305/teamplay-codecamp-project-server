@@ -13,10 +13,7 @@ export class Type {
   @Field(() => String)
   name!: string;
 
-  @ManyToMany(() => User, user => user.types, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToMany(() => User, user => user.types, { cascade: true, onDelete: 'CASCADE'})
   @Field(() => [User])
   users?: User[];
 }

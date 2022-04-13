@@ -11,13 +11,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IsEmail } from 'class-validator';
-import { Tendency } from 'src/apis/tendency/entities/tendency.entity';
 import { Position } from 'src/apis/position/entities/position.entity';
-import { Type } from 'src/apis/type/entities/type.entity';
 import { ChatRoomMember } from 'src/apis/chatRoom/entities/chatRoomMember.entity';
 import { Board } from 'src/apis/board/entities/board.entity';
-import { Task } from 'src/apis/task/entities/task.entity';
 import { ProjectMember } from 'src/apis/project/entities/projectMember.entity';
+import { Tendency } from 'src/apis/tendency/entities/tendency.entity';
+import { Type } from 'src/apis/type/entities/type.entity';
+import { Task } from 'src/apis/task/entities/task.entity';
+
 
 export enum CAREER_ENUM {
   STUDENT = 'STUDENT',
