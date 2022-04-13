@@ -44,6 +44,7 @@ export class ProjectService {
 
     @InjectRepository(ProjectMember)
     private readonly projectMemberRepository: Repository<ProjectMember>,
+
   ) {}
 
   async findOne({ projectId }) {

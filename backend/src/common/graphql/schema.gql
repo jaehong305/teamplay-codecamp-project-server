@@ -2,18 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Tendency {
-  id: String!
-  name: String!
-  users: [User!]!
-}
-
-type Type {
-  id: String!
-  name: String!
-  users: [User!]!
-}
-
 type Chat {
   id: String!
   content: String!
@@ -43,6 +31,24 @@ type ChatRoomMember {
   user: User!
 }
 
+type ProjectMember {
+  id: String!
+  user: User!
+  project: Project!
+}
+
+type Tendency {
+  id: String!
+  name: String!
+  users: [User!]!
+}
+
+type Type {
+  id: String!
+  name: String!
+  users: [User!]!
+}
+
 type Task {
   id: String!
   content: String!
@@ -61,12 +67,6 @@ enum TASK_TYPE_ENUM {
   DESIGN
   DEVELOPMENT
   PLANNING
-}
-
-type ProjectMember {
-  id: String!
-  user: User!
-  project: User!
 }
 
 type User {
@@ -142,8 +142,8 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime!
-  board: [Board!]
-  task: [Task!]
+  boards: [Board!]
+  tasks: [Task!]
   projectMembers: [ProjectMember!]
 }
 
@@ -183,6 +183,23 @@ enum POINT_PAYMENT_STATUS_ENUM {
   CANCEL
 }
 
+type Qna {
+  id: String!
+  qnaType: QNA_TYPE_ENUM!
+  title: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  user: User!
+  project: Project!
+}
+
+enum QNA_TYPE_ENUM {
+  QUESTION
+  ANSWER
+}
+
 type Query {
   fetchChatRooms: [ChatRoom!]!
   fetchChats(chatRoomId: String!): [Chat!]!
@@ -205,6 +222,8 @@ type Query {
   fetchUsers(page: Float!): [User!]!
   fetchBoards(projectId: String!): [Board!]!
   fetchBoard(boardId: String!): Board!
+  fetchQnas(projectId: String!): [Qna!]!
+  fetchQna(qnaId: String!): Qna!
 }
 
 type Mutation {
@@ -242,6 +261,9 @@ type Mutation {
   createBoard(projectId: String!, title: String!, content: String!): Board!
   updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!
+  createQna(projectId: String!, title: String!, content: String!, qnaType: QNA_TYPE_ENUM!): Qna!
+  updateQna(qnaId: String!, title: String!, content: String!): Qna!
+  deleteQna(qnaId: String!): Boolean!
 }
 
 """The `Upload` scalar type represents a file upload."""
