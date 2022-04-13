@@ -18,8 +18,8 @@ export class TaskService {
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
 
-    @InjectRepository(ProjectMember)
-    private readonly projectMemberRepository: Repository<ProjectMember>,
+    // @InjectRepository(ProjectMember)
+    // private readonly projectMemberRepository: Repository<ProjectMember>,
   ) {}
 
   async findAll({ projectId }) {
@@ -33,28 +33,20 @@ export class TaskService {
     });
   }
 
-  // 업무 추가하기 기능
   async create({ projectId, writerId, content, limit, taskType, userIds }) {
-    const projectMember = await this.projectMemberRepository.findOne({ user: writerId, project: projectId });
-    if (!projectMember) throw new UnauthorizedException('프로젝트 참여 회원만 업무 추가가 가능합니다.');
-
     const users = await Promise.all(
       userIds.map(id => {
         return this.userRepository.findOne({ id });
       }),
     );
-
     const user = await this.userRepository.findOne({ id: writerId });
-
     const project = await this.projectRepository.findOne({ id: projectId });
-    return await this.taskRepository.save({ project, content, limit, taskType, users, user });
+    return await this.taskRepository.save({ project, user, content, limit, taskType, users });
   }
 
   async update({ taskId, updateUser, content, limit, taskType, userIds }) {
-    const task = await this.taskRepository.findOne({ where: { id: taskId }, relations: ['user'] });
-
+    const task = await this.taskRepository.findOne( { where: {id: taskId}, relations: ['user'] } );
     if (task.user.id !== updateUser) throw new UnauthorizedException('작성자만 수정이 가능합니다.');
-
     const users = await Promise.all(
       userIds.map(id => {
         return this.userRepository.findOne({ id });
@@ -62,7 +54,7 @@ export class TaskService {
     );
 
     const newTask = {
-      task,
+      ...task,
       content,
       limit,
       taskType,

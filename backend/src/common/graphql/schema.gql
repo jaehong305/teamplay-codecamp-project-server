@@ -53,8 +53,8 @@ type Task {
   updatedAt: DateTime!
   deletedAt: DateTime!
   project: Project!
-  users: [User!]!
   user: User!
+  users: [User!]!
 }
 
 enum TASK_TYPE_ENUM {
@@ -83,7 +83,7 @@ type User {
   types: [Type!]
   tasks: [Task!]
   chatRoomMembers: [ChatRoomMember!]!
-  board: [Board!]
+  boards: [Board!]
   projectMembers: [ProjectMember!]
 }
 
@@ -185,7 +185,7 @@ enum POINT_PAYMENT_STATUS_ENUM {
 
 type Query {
   fetchChatRooms: [ChatRoom!]!
-  fetchChats(chatRoomId: String!, page: Float!): [Chat!]!
+  fetchChats(chatRoomId: String!): [Chat!]!
   fetchChatRoomMembers(chatRoomId: String!): [ChatRoomMember!]!
   fetchLocations: [Location!]!
   fetchPlatforms: [Platform!]!
@@ -238,6 +238,7 @@ type Mutation {
   updateUserByOnboard(updateUserOnboardInput: UpdateUserOnboardInput!): User!
   updateUser(name: String!, password: String!, changePassword: String!): User!
   deleteUser: Boolean!
+  deleteUserHard(email: String!): Boolean!
   createBoard(projectId: String!, title: String!, content: String!): Board!
   updateBoard(boardId: String!, title: String!, content: String!): Board!
   deleteBoard(boardId: String!): Boolean!

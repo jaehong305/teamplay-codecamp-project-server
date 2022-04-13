@@ -29,8 +29,7 @@ export class BoardResolver {
     @Args('content') content: string,
     @CurrentUser() currentUser: ICurrentUser,
   ) {
-    const writerId = currentUser.id;
-    return await this.boardService.create({ projectId, writerId, title, content });
+    return await this.boardService.create({ projectId, writerId: currentUser.id, title, content });
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -41,8 +40,7 @@ export class BoardResolver {
     @Args('content') content: string,
     @CurrentUser() currentUser: ICurrentUser,
   ) {
-    const updateUser = currentUser.id;
-    return await this.boardService.update({ boardId, title, content, updateUser });
+    return await this.boardService.update({ boardId, updateUser:currentUser, title, content });
   }
 
   @UseGuards(GqlAuthAccessGuard)

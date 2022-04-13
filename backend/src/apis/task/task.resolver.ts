@@ -4,9 +4,6 @@ import { Task, TASK_TYPE_ENUM } from './entities/task.entity';
 import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
-import { ProjectMember } from '../project/entities/projectMember.entity';
-import { Connection, Repository } from 'typeorm';
-import { Project } from '../project/entities/project.entity';
 
 @Resolver()
 export class TaskResolver {
@@ -29,12 +26,12 @@ export class TaskResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Task)
   async createTask(
-    @CurrentUser() currentUser: ICurrentUser,
     @Args('projectId') projectId: string,
     @Args('content') content: string,
     @Args('limit') limit: Date,
     @Args({name:'taskType', type: () => TASK_TYPE_ENUM }) taskType: TASK_TYPE_ENUM,
-    @Args({name: 'userIds', type: () => [String]}) userIds: string[]
+    @Args({name: 'userIds', type: () => [String]}) userIds: string[],
+    @CurrentUser() currentUser: ICurrentUser 
     ) {
     return await this.taskService.create({projectId, writerId: currentUser.id, content, limit, taskType, userIds});
   }
@@ -49,8 +46,7 @@ export class TaskResolver {
     @Args({ name: 'userIds', type: () => [String]}) userIds: string[],
     @CurrentUser() currentUser: ICurrentUser
   ) {
-    const updateUser = currentUser.id;
-    return await this.taskService.update({taskId, updateUser, content, limit, taskType, userIds});
+    return await this.taskService.update({taskId, updateUser:currentUser.id, content, limit, taskType, userIds});
   }
 
   @UseGuards(GqlAuthAccessGuard)

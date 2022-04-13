@@ -48,16 +48,16 @@ export class Task {
   @Field(() => Date)
   deletedAt: Date;
 
-  @ManyToOne(() => Project, (project) => project.id)
+  @ManyToOne(() => Project)
   @Field(() => Project)
   project: Project;
   
-  @JoinTable()
-  @ManyToMany(() => User)
-  @Field(() => [User])
-  users?: User[]
-
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, user => user.id)
   @Field(() => User)
   user: User
+
+  @JoinTable()
+  @ManyToMany(() => User, user => user.id)
+  @Field(() => [User])
+  users?: User[]
 }
