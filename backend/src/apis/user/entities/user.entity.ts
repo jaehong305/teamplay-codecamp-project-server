@@ -81,7 +81,7 @@ export class User {
   @Field(() => [Type], { nullable: true })
   types?: Type[];
 
-  @ManyToMany(() => Task)
+  @ManyToMany(() => Task, task => task.user)
   @Field(() => [Task], { nullable: true })
   tasks?: Task[];
 
@@ -91,7 +91,7 @@ export class User {
 
   @OneToMany(() => Board, board => board.user)
   @Field(() => [Board], { nullable: true })
-  board?: Board[];
+  boards?: Board[];
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.user)
   @Field(() => [ProjectMember], { nullable: true })

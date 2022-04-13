@@ -36,10 +36,9 @@ export class BoardService {
     return await this.boardRepository.save({ user, title, content, project });
   }
 
-  async update({ boardId, title, content, updateUser }) {
-    const user = await this.userRepository.findOne({ id: updateUser.id });
+  async update({ boardId, updateUser, title, content }) {
     const board = await this.boardRepository.findOne({ where: { id: boardId }, relations: ['user'] });
-    if (user.id !== board.user.id) throw new UnauthorizedException('자신의 글만 수정 가능합니다.');
+    if (updateUser.id !== board.user.id) throw new UnauthorizedException('자신의 글만 수정 가능합니다.');
     const newBoard = {
       ...board,
       title,

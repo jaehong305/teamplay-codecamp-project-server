@@ -41,6 +41,7 @@ export class ProjectResolver {
     return await this.projectService.create({ leaderId: currentUser.id, createProjectInput });
   }
 
+  @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Project])
   async searchProjects(@Args('search') search: string) {
     const list = await this.cacheManager.get(`${search}`);
@@ -68,6 +69,41 @@ export class ProjectResolver {
       return searchResultmap;
     }
   }
+
+  @UseGuards(GqlAuthAccessGuard)
+  @Query(() => [Project])
+  async searchTags(
+    @Args('search') search: string
+    ) {
+    const list = await this.cacheManager.get(`${search}`);
+    if (list) {
+      return list;
+    }
+    else {
+      const searchResult = await this.elasticsearchService.search({
+        index: 'tag',
+        from: 0,
+        size: 100,
+        query: {
+          bool: {
+            should: [
+              {prefix: {name: search}}
+            ],
+          },
+        },
+    });
+      const searchResultmap = searchResult.hits.hits.map((el:any) => ({
+        id:el._source.id,
+        name:el._source.name,
+      }));
+      if(searchResultmap.length === 0){
+        throw new UnprocessableEntityException('검색 결과가 존재하지 않습니다.')
+      }
+      await this.cacheManager.set(`${search}`, searchResultmap, { ttl: 0 });
+      return searchResultmap;
+    }
+  }
+
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Project)
