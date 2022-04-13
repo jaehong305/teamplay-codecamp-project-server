@@ -29,7 +29,7 @@ export class BoardResolver {
     @Args('content') content: string,
     @CurrentUser() currentUser: ICurrentUser,
   ) {
-    return await this.boardService.create({ projectId, writerId: currentUser.id, title, content });
+    return await this.boardService.create({ projectId, createUser: currentUser.id, title, content });
   }
 
   @UseGuards(GqlAuthAccessGuard)
@@ -40,12 +40,15 @@ export class BoardResolver {
     @Args('content') content: string,
     @CurrentUser() currentUser: ICurrentUser,
   ) {
-    return await this.boardService.update({ boardId, updateUser:currentUser, title, content });
+    return await this.boardService.update({ boardId, updateUser:currentUser.id, title, content });
   }
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Boolean)
-  async deleteBoard(@Args('boardId') boardId: string) {
-    return await this.boardService.delete({ boardId });
+  async deleteBoard(
+    @Args('boardId') boardId: string,
+    @CurrentUser() currentUser: ICurrentUser
+    ) {
+    return await this.boardService.delete({ boardId, deleteUser:currentUser.id });
   }
 }

@@ -19,26 +19,26 @@ export class BoardService {
   async findAll({ projectId }) {
     return await this.boardRepository.find({
       where: { project: projectId },
-      relations: ['user'],
+      relations: ['user','project']
     });
   }
 
   async findOne({ boardId }) {
     return await this.boardRepository.findOne({
       where: { id: boardId },
-      relations: ['user'],
+      relations: ['user','project']
     });
   }
 
-  async create({ projectId, writerId, title, content }) {
-    const user = await this.userRepository.findOne({ id: writerId });
+  async create({ projectId, createUser, title, content }) {
+    const user = await this.userRepository.findOne({ id: createUser });
     const project = await this.projectRepository.findOne({ id: projectId });
     return await this.boardRepository.save({ user, title, content, project });
   }
 
   async update({ boardId, updateUser, title, content }) {
     const board = await this.boardRepository.findOne({ where: { id: boardId }, relations: ['user'] });
-    if (updateUser.id !== board.user.id) throw new UnauthorizedException('자신의 글만 수정 가능합니다.');
+    if (updateUser !== board.user.id) throw new UnauthorizedException('자신의 게시글만 수정 가능합니다.');
     const newBoard = {
       ...board,
       title,
@@ -47,8 +47,10 @@ export class BoardService {
     return await this.boardRepository.save(newBoard);
   }
 
-  async delete({ boardId }) {
-    const result = await this.boardRepository.softDelete({ id: boardId }); // 다양한 조건으로 삭제 가능
+  async delete({ boardId, deleteUser }) {
+    const board = await this.boardRepository.findOne({ where: { id: boardId }, relations: ['user', 'project'] });
+    if (deleteUser !== board.user.id) throw new UnauthorizedException('자신의 게시글만 삭제 가능합니다.');
+    const result = await this.boardRepository.softDelete({ id: boardId });
     return result.affected ? true : false;
   }
 }

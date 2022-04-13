@@ -1,9 +1,10 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TaskService } from './task.service';
 import { Task, TASK_TYPE_ENUM } from './entities/task.entity';
-import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
+import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
+
 
 @Resolver()
 export class TaskResolver {
@@ -31,7 +32,7 @@ export class TaskResolver {
     @Args('limit') limit: Date,
     @Args({name:'taskType', type: () => TASK_TYPE_ENUM }) taskType: TASK_TYPE_ENUM,
     @Args({name: 'userIds', type: () => [String]}) userIds: string[],
-    @CurrentUser() currentUser: ICurrentUser 
+    @CurrentUser() currentUser: ICurrentUser
     ) {
     return await this.taskService.create({projectId, writerId: currentUser.id, content, limit, taskType, userIds});
   }

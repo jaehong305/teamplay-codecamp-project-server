@@ -3,8 +3,6 @@ import { Board } from 'src/apis/board/entities/board.entity';
 import { ChatRoom } from 'src/apis/chatRoom/entities/chatRoom.entity';
 import { Location } from 'src/apis/location/entities/location.entity';
 import { Platform } from 'src/apis/platform/entities/platform.entity';
-import { Type } from 'src/apis/type/entities/type.entity';
-import { User } from 'src/apis/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -21,6 +19,9 @@ import {
 import { ProjectToPosition } from './projectToPosition.entity';
 import { ProjectMember } from './projectMember.entity';
 import { Task } from 'src/apis/task/entities/task.entity';
+import { User } from 'src/apis/user/entities/user.entity';
+import { Type } from 'src/apis/type/entities/type.entity';
+
 
 export enum METHOD_ENUM {
   MEET = 'MEET',
@@ -117,11 +118,11 @@ export class Project {
 
   @OneToMany(() => Board, board => board.project)
   @Field(() => [Board], { nullable: true })
-  board?: Board[];
+  boards?: Board[];
 
   @OneToMany(() => Task, task => task.project)
   @Field(() => [Task], { nullable: true })
-  task?: Task[];
+  tasks?: Task[];
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.project)
   @Field(() => [ProjectMember], { nullable: true })
