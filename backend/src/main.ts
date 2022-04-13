@@ -9,7 +9,6 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors({
     origin: [process.env.CLIENT_URL, 'http://localhost:3000'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
   app.use(graphqlUploadExpress());
