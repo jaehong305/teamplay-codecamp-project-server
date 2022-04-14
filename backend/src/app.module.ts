@@ -22,6 +22,7 @@ import { TendencyModule } from './apis/tendency/tendency.module';
 import { TypeModule } from './apis/type/type.module';
 import { UserModule } from './apis/user/user.module';
 import { QnaModule } from './apis/qna/qna.module';
+import { ReviewModule } from './apis/review/review.module';
 
 
 @Module({
@@ -42,6 +43,7 @@ import { QnaModule } from './apis/qna/qna.module';
     UserModule,
     BoardModule,
     QnaModule,
+    ReviewModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/common/graphql/schema.gql',
