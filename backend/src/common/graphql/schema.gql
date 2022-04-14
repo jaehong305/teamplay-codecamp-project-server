@@ -121,6 +121,34 @@ type Platform {
   projects: [Project!]!
 }
 
+type Qna {
+  id: String!
+  qnaType: QNA_TYPE_ENUM!
+  title: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  user: User!
+  project: Project!
+}
+
+enum QNA_TYPE_ENUM {
+  QUESTION
+  ANSWER
+}
+
+type Review {
+  id: String!
+  title: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  user: User!
+  project: Project!
+}
+
 type Project {
   id: String!
   name: String!
@@ -144,6 +172,8 @@ type Project {
   deletedAt: DateTime!
   boards: [Board!]
   tasks: [Task!]
+  qnas: [Qna!]
+  reviews: [Review!]
   projectMembers: [ProjectMember!]
 }
 
@@ -183,34 +213,6 @@ enum POINT_PAYMENT_STATUS_ENUM {
   CANCEL
 }
 
-type Qna {
-  id: String!
-  qnaType: QNA_TYPE_ENUM!
-  title: String!
-  content: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  user: User!
-  project: Project!
-}
-
-enum QNA_TYPE_ENUM {
-  QUESTION
-  ANSWER
-}
-
-type Review {
-  id: String!
-  title: String!
-  content: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  user: User!
-  project: Project!
-}
-
 type Query {
   fetchChatRooms: [ChatRoom!]!
   fetchChats(chatRoomId: String!): [Chat!]!
@@ -222,7 +224,6 @@ type Query {
   fetchProject(projectId: String!): Project!
   fetchProjectCounts: Int!
   searchProjects(search: String!): [Project!]!
-  searchTags(search: String!): [Project!]!
   fetchRegions: [Region!]!
   fetchTasks(projectId: String!): [Task!]!
   fetchTask(taskId: String!): Task!

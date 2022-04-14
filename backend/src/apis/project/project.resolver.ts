@@ -44,66 +44,34 @@ export class ProjectResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Project])
   async searchProjects(@Args('search') search: string) {
-    const list = await this.cacheManager.get(`${search}`);
-    if (list) {
-      return list;
+    const searchCache = await this.cacheManager.get(`project: ${search}`);
+    if (searchCache) {
+      return searchCache;
     } else {
       const searchResult = await this.elasticsearchService.search({
         index: 'project',
         from: 0,
         size: 100,
         query: {
-          bool: {
-            should: [{ prefix: { name: search } }],
-          },
+          bool: { 
+            should: [
+              { prefix: { name: search }},
+            ],
+          }, 
         },
-      });
+      }); 
       const searchResultmap = searchResult.hits.hits.map((el: any) => ({
         id: el._source.id,
         name: el._source.name,
       }));
+      console.log(searchResultmap)
       if (searchResultmap.length === 0) {
         throw new UnprocessableEntityException('검색 결과가 존재하지 않습니다.');
       }
-      await this.cacheManager.set(`${search}`, searchResultmap, { ttl: 0 });
+      await this.cacheManager.set(`project:${search}`, searchResultmap, { ttl: 600 });
       return searchResultmap;
     }
   }
-
-  @UseGuards(GqlAuthAccessGuard)
-  @Query(() => [Project])
-  async searchTags(
-    @Args('search') search: string
-    ) {
-    const list = await this.cacheManager.get(`${search}`);
-    if (list) {
-      return list;
-    }
-    else {
-      const searchResult = await this.elasticsearchService.search({
-        index: 'tag',
-        from: 0,
-        size: 100,
-        query: {
-          bool: {
-            should: [
-              {prefix: {name: search}}
-            ],
-          },
-        },
-    });
-      const searchResultmap = searchResult.hits.hits.map((el:any) => ({
-        id:el._source.id,
-        name:el._source.name,
-      }));
-      if(searchResultmap.length === 0){
-        throw new UnprocessableEntityException('검색 결과가 존재하지 않습니다.')
-      }
-      await this.cacheManager.set(`${search}`, searchResultmap, { ttl: 0 });
-      return searchResultmap;
-    }
-  }
-
 
   @UseGuards(GqlAuthAccessGuard)
   @Mutation(() => Project)

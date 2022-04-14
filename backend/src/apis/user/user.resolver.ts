@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { BadRequestException, CACHE_MANAGER, Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, CACHE_MANAGER, Inject, UnauthorizedException, UnprocessableEntityException, UseGuards } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { CreateUserInput } from './dto/createUser.Input';
 import { User } from './entities/user.entity';
@@ -8,12 +8,13 @@ import { GqlAuthAccessGuard } from 'src/common/auth/gql-auth.guard';
 import { CurrentUser, ICurrentUser } from 'src/common/auth/gql-user.param';
 import { UpdateUserOnboardInput } from './dto/updateUser.onboard.input';
 import bcrypt from 'bcrypt';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Resolver()
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
-
+    private readonly elasticsearchService: ElasticsearchService,
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
   ) {}

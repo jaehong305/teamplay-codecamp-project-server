@@ -50,7 +50,7 @@ export class ProjectService {
   async findOne({ projectId }) {
     return await this.projectRepository.findOne({
       where: { id: projectId },
-      relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms', 'projectMembers', 'board', 'task'],
+      relations: ['type', 'location', 'leader', 'projectToPositions', 'platforms', 'projectMembers', 'boards', 'tasks', 'qnas', 'reviews'],
     });
   }
 
