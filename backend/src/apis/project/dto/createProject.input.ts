@@ -19,6 +19,8 @@ export class CreateProjectInput extends OmitType(
     'platforms',
     'boards',
     'tasks',
+    'qnas',
+    'reviews',
     'projectMembers',
     'chatRoom',
   ],
