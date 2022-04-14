@@ -21,6 +21,8 @@ import { ProjectMember } from './projectMember.entity';
 import { Task } from 'src/apis/task/entities/task.entity';
 import { User } from 'src/apis/user/entities/user.entity';
 import { Type } from 'src/apis/type/entities/type.entity';
+import { Qna } from 'src/apis/qna/entities/qna.entity';
+import { Review } from 'src/apis/review/entities/review.entity';
 
 
 export enum METHOD_ENUM {
@@ -123,6 +125,14 @@ export class Project {
   @OneToMany(() => Task, task => task.project)
   @Field(() => [Task], { nullable: true })
   tasks?: Task[];
+
+  @OneToMany(() => Qna, qna => qna.project)
+  @Field(() => [Qna], { nullable: true })
+  qnas?: Qna[];
+
+  @OneToMany(() => Review, review => review.project)
+  @Field(() => [Review], { nullable: true })
+  reviews?: Review[];
 
   @OneToMany(() => ProjectMember, projectMember => projectMember.project)
   @Field(() => [ProjectMember], { nullable: true })
