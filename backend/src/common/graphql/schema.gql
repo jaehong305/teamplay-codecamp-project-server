@@ -200,6 +200,17 @@ enum QNA_TYPE_ENUM {
   ANSWER
 }
 
+type Review {
+  id: String!
+  title: String!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  user: User!
+  project: Project!
+}
+
 type Query {
   fetchChatRooms: [ChatRoom!]!
   fetchChats(chatRoomId: String!): [Chat!]!
@@ -224,6 +235,8 @@ type Query {
   fetchBoard(boardId: String!): Board!
   fetchQnas(projectId: String!): [Qna!]!
   fetchQna(qnaId: String!): Qna!
+  fetchReviews(projectId: String!): [Review!]!
+  fetchReview(reviewId: String!): Review!
 }
 
 type Mutation {
@@ -264,6 +277,9 @@ type Mutation {
   createQna(projectId: String!, title: String!, content: String!, qnaType: QNA_TYPE_ENUM!): Qna!
   updateQna(qnaId: String!, title: String!, content: String!): Qna!
   deleteQna(qnaId: String!): Boolean!
+  createReview(projectId: String!, title: String!, content: String!): Review!
+  updateReview(reviewId: String!, title: String!, content: String!): Review!
+  deleteReview(reviewId: String!): Boolean!
 }
 
 """The `Upload` scalar type represents a file upload."""
