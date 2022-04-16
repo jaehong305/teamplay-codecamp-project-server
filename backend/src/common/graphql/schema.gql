@@ -222,6 +222,7 @@ type Query {
   fetchPositions: [Position!]!
   fetchProjects(page: Float!): [Project!]!
   fetchProject(projectId: String!): Project!
+  fetchProjectAll: [Project!]!
   fetchProjectCounts: Int!
   searchProjects(search: String!): [Project!]!
   fetchRegions: [Region!]!

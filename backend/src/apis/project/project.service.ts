@@ -63,6 +63,10 @@ export class ProjectService {
     });
   }
 
+  async findAll(){
+    return await this.projectRepository.find({})
+  }
+
   async findCount() {
     return await this.projectRepository.count({ isStart: false });
   }

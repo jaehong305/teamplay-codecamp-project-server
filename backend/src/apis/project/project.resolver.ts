@@ -27,6 +27,11 @@ export class ProjectResolver {
     return await this.projectService.findOne({ projectId });
   }
 
+  @Query(() => [Project])
+  async fetchProjectAll() {
+    return await this.projectService.findAll();
+  }
+
   @Query(() => Int)
   async fetchProjectCounts() {
     return await this.projectService.findCount();
@@ -44,12 +49,12 @@ export class ProjectResolver {
   @UseGuards(GqlAuthAccessGuard)
   @Query(() => [Project])
   async searchProjects(@Args('search') search: string) {
-    const searchCache = await this.cacheManager.get(`project: ${search}`);
+    const searchCache = await this.cacheManager.get(`${search}`);
     if (searchCache) {
       return searchCache;
     } else {
       const searchResult = await this.elasticsearchService.search({
-        index: 'project',
+        index: "project",
         from: 0,
         size: 100,
         query: {
@@ -60,15 +65,17 @@ export class ProjectResolver {
           }, 
         },
       }); 
+      console.log(searchResult.hits.hits)
       const searchResultmap = searchResult.hits.hits.map((el: any) => ({
         id: el._source.id,
         name: el._source.name,
+        imgUrl: el._source.imgurl,
+        recruitDate: el._source.recruitdate
       }));
-      console.log(searchResultmap)
       if (searchResultmap.length === 0) {
         throw new UnprocessableEntityException('검색 결과가 존재하지 않습니다.');
       }
-      await this.cacheManager.set(`project:${search}`, searchResultmap, { ttl: 600 });
+      await this.cacheManager.set(`${search}`, searchResultmap, { ttl: 600 });
       return searchResultmap;
     }
   }
