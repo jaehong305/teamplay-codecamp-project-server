@@ -12,7 +12,7 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://127.0.0.1:5500', 'http://localhost:3000', 'https://codecamptest.shop'],
+    origin: [process.env.CLIENT_URL, 'http://localhost:3000', 'https://codecamptest.shop'],
     credentials: true,
   },
 })
