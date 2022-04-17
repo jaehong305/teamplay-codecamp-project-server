@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors({
-    origin: [process.env.CLIENT_URL, 'http://localhost:3000'],
+    origin: [process.env.CLIENT_URL, 'https://codecamptest.shop', 'http://localhost:3000'],
     credentials: true,
   });
   app.use(graphqlUploadExpress());

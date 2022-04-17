@@ -44,7 +44,7 @@ export class AuthService {
 
     const isOnboarding = await this.cacheManager.get(user.email);
     isOnboarding === false
-      ? res.redirect('http://localhost:3000/onboarding')
-      : res.redirect('http://localhost:3000/main');
+      ? res.redirect(`${process.env.CLIENT_URL}/onboarding`)
+      : res.redirect(`${process.env.CLIENT_URL}/main`);
   }
 }

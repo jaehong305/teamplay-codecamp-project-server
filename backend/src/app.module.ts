@@ -24,7 +24,6 @@ import { UserModule } from './apis/user/user.module';
 import { QnaModule } from './apis/qna/qna.module';
 import { ReviewModule } from './apis/review/review.module';
 
-
 @Module({
   imports: [
     AuthModule,
@@ -49,7 +48,7 @@ import { ReviewModule } from './apis/review/review.module';
       autoSchemaFile: 'src/common/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: [process.env.CLIENT_URL, 'http://localhost:3000'],
+        origin: [process.env.CLIENT_URL, 'https://codecamptest.shop', 'http://localhost:3000'],
         credentials: true,
       },
     }),
