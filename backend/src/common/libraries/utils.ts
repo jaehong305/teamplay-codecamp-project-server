@@ -6,5 +6,5 @@ export const getToday = () => {
   const hh = date.getHours();
   const mm = date.getMinutes();
   const ss = date.getSeconds();
-  return `${yyyy}/${MM}/${dd}/${hh}:${mm}:${ss}`;
+  return `${yyyy}/${MM}/${dd}`;
 };
