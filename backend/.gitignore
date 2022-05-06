@@ -1,4 +1,5 @@
 .env*
+teamplay-gcp.json
 
 # compiled output
 /dist
