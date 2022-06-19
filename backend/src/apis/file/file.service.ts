@@ -20,6 +20,7 @@ export class FileService {
     }).bucket(GCP_STORAGE_BUCKET);
 
     // 일단 먼저 다 받기
+    
     const waitedFiles = await Promise.all(files);
 
     // 구글 스토리지에 동시에 모두 올리기
